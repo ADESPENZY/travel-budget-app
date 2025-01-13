@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block main %}
+   
+<div class="bg-gray-900 h-screen flex text-white">
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-full lg:w-[20%] bg-gray-800 h-full lg:h-auto p-6 lg:p-0 lg:flex flex-col fixed lg:relative z-50 hidden">
+        <button id="closeSidebar" class="text-yellow-600 absolute top-4 right-4 lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Logo and Title -->
+        <div class="p-5 flex items-center md:justify-center lg:justify-start gap-4 border-b border-gray-700 ">
+            <a href="/" class="text-2xl font-bold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                </svg>
+                <span class="text-yellow-600">Travel</span>Budget
+            </a>
+        </div>
+
+        <!-- Welcome Section -->
+        <div class="p-6 border-b border-gray-700">
+            <h2 class="text-lg font-semibold">
+                Welcome, <span class="text-yellow-600">{{ request.user.username }}</span>
+            </h2>
+            <p class="text-sm text-gray-400">Plan your trips with ease!</p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="p-6 space-y-6">
+            <ul class="space-y-4 font-medium">
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L16.25 10M9.75 7h11.5M3 17h6.75m-6.75-10h6.75" />
+                    </svg>
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4z" />
+                    </svg>
+                    <a href="{% url 'add_trip' %}">Create Trips</a>
+                </li>
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 12h8m-8 5h6" />
+                    </svg>
+                    <a href="{% url 'trip_list' %}">Trip Details</a>
+                </li>
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <a href="#">Travel History</a>
+                </li>
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <a href="#">Incoming Trips</a>
+                </li>
+            </ul>
+        
+            <div>
+                <h3 class="font-semibold text-sm uppercase text-gray-400 mb-2">Support</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h8" />
+                        </svg>
+                        <a href="#">Settings</a>
+                    </li>
+                    <li class="flex items-center gap-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h8" />
+                        </svg>
+                        <a href="#">Notifications</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="w-full lg:w-[80%] bg-gray-700 h-full p-6 overflow-y-auto">
+        <!-- Toggle Button for Sidebar -->
+        <button id="toggleSidebar" class="lg:hidden text-white px-4 py-2 rounded-lg mb-4 focus:outline-none">
+            <!-- Menu Icon for opening the sidebar -->
+            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
+        <div class="text-center">
+            <h1 class="text-3xl font-bold">Dashboard</h1>
+            <p class="text-gray-300">Manage your travel plans and expenses</p>
+        </div>
+
+        <!-- Example Section -->
+        <div class="grid md:grid-cols-3 gap-6 mt-8">
+
+            <!-- Trip Card -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                
+                {% for trip in user_trips %}
+                <h2 class="text-xl font-bold text-yellow-600 mb-3">Current Trip</h2>
+
+                <!-- Destination -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.707 13.293a1 1 0 010 1.414l-5.657 5.657a1 1 0 01-1.414 0l-5.657-5.657a1 1 0 010-1.414L10 8.586a1 1 0 011.414 0L16.707 13.293z" />
+                    </svg>
+                    <p class="text-sm text-gray-300"><span class="font-bold">Destination:</span> {{ trip.destination_name }}</p>
+                </div>
+
+                <!-- Start and End Dates -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-8 14v4m8-4v4m-8-4h8a2 2 0 012 2v0a2 2 0 01-2 2H8a2 2 0 01-2-2v0a2 2 0 012-2zm0-4h8m-8-4h8M7 10h1m8 0h1m-9 0h1m8 0h1M7 14h1m8 0h1m-9 0h1m8 0h1" />
+                    </svg>
+                    <p class="text-sm text-gray-300">
+                        <span class="font-bold">Dates:</span> {{ trip.start_date }} - {{ trip.end_date }}
+                    </p>
+                </div>
+
+                <!-- Total and Remaining Budget -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c.341 0 .674.028 1 .08m-2 11.92c.326.052.659.08 1 .08m-6-5a10 10 0 0010 10m-9-5a10 10 0 0110-10m9 5a10 10 0 00-10-10m9 5a10 10 0 01-10 10m-9-5a10 10 0 0010-10" />
+                    </svg>
+                    <p class="text-sm text-gray-300">
+                        <span class="font-bold">Budget:</span> {{ trip.budget }} <span class="text-green-400">(Remaining: $500)</span>
+                    </p>
+                </div>
+
+                <!-- Small Itineraries -->
+                <div>
+                    <h3 class="text-sm font-bold text-yellow-600 mb-2">Itinerary:</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-300 text-sm">
+                        <li>Eiffel Tower visit at 10:00 AM</li>
+                        <li>Lunch at Le Jules Verne</li>
+                        <li>Evening Seine River Cruise</li>
+                        <li>Day trip to Versailles</li>
+                    </ul>
+                </div>
+                    
+                {% endfor %}
+                    
+
+            </div>
+
+
+            <!-- Starred Destination Card -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-lg transition-shadow">
+                <h2 class="text-xl font-bold text-yellow-600 mb-3">Starred Destination</h2>
+
+                <!-- Destination -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 19.121a1.5 1.5 0 002.121-2.121L4 14.879 5.121 19.121zM14.879 4l2.121 2.121L12 11.121a1.5 1.5 0 11-2.121-2.121L14.879 4zM15 3v4m0 8v4m4-4h4m-8 0H7m8 0H7" />
+                    </svg>
+                    <p class="text-sm text-gray-300"><span class="font-bold">Destination:</span> Maldives</p>
+                </div>
+
+                <!-- Tentative Dates -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-8 14v4m8-4v4m-8-4h8a2 2 0 012 2v0a2 2 0 01-2 2H8a2 2 0 01-2-2v0a2 2 0 012-2zm0-4h8m-8-4h8M7 10h1m8 0h1m-9 0h1m8 0h1M7 14h1m8 0h1m-9 0h1m8 0h1" />
+                    </svg>
+                    <p class="text-sm text-gray-300"><span class="font-bold">Dates:</span> TBD</p>
+                </div>
+
+                <!-- Estimated Budget -->
+                <div class="flex items-center mb-3">
+                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c.341 0 .674.028 1 .08m-2 11.92c.326.052.659.08 1 .08m-6-5a10 10 0 0010 10m-9-5a10 10 0 0110-10m9 5a10 10 0 00-10-10m9 5a10 10 0 01-10 10m-9-5a10 10 0 0010-10" />
+                    </svg>
+                    <p class="text-sm text-gray-300">
+                        <span class="font-bold">Budget Estimate:</span> $5,000
+                    </p>
+                </div>
+
+                <!-- Notes or Description -->
+                <div>
+                    <h3 class="text-sm font-bold text-yellow-600 mb-2">Notes:</h3>
+                    <p class="text-gray-300 text-sm">
+                        A dream destination for relaxation and adventure. Explore white sand beaches, luxurious resorts, and vibrant marine life.
+                    </p>
+                </div>
+
+                <!-- Star Icon to Show "Starred" Status -->
+                <div class="mt-4 flex justify-end">
+                    <svg class="w-6 h-6 text-yellow-600 cursor-pointer hover:text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="none">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Quick Settings Card -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-lg transition-shadow">
+                <h2 class="text-xl font-bold text-yellow-600 mb-4 flex items-center">
+                    <!-- Icon -->
+                    <svg class="w-6 h-6 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m0 14v1m8.485-10.485l-.707.707M4.222 5.636l-.707.707M20 12h1m-17 0H3m13.364 6.364l.707.707M6.343 17.657l.707.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Quick Settings
+                </h2>
+
+                <!-- Settings Options -->
+                <div class="space-y-4">
+                    <!-- Update Profile -->
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-gray-300 flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 005 20h14a4 4 0 00.121-8.196M9 11a4 4 0 018 0M9 16v5m6-5v5" />
+                            </svg>
+                            Profile Details
+                        </p>
+                        <a href="{% url 'profile_detail' %}" class="bg-white text-black px-3 py-1 text-sm rounded hover:bg-gray-400">
+                            Details
+                        </a>
+                    </div>
+                    <!-- Manage Notifications -->
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-gray-300 flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.5V11a6 6 0 10-12 0v3.5c0 .362-.074.717-.213 1.042L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9" />
+                            </svg>
+                            Manage Notifications
+                        </p>
+                        <button class="bg-yellow-600 text-white px-3 py-1 text-sm rounded hover:bg-yellow-500">
+                            Settings
+                        </button>
+                    </div>
+
+                    <!-- Account Privacy -->
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-gray-300 flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.657 2.686-3 6-3m-6 0c0-1.657-2.686-3-6-3m6 0c0 1.657-2.686 3-6 3m6 0c0 1.657-2.686 3-6 3m6 0c0-1.657 2.686-3 6-3m-6 0c0 1.657 2.686 3 6 3M6 9h12m-6 2v6" />
+                            </svg>
+                            Account Privacy
+                        </p>
+                        <button class="bg-gray-700 text-white px-3 py-1 text-sm rounded hover:bg-gray-500">
+                            Secure
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Footer -->
+                <div class="mt-6 text-right">
+                    <a href="#" class="text-yellow-600 text-sm font-medium hover:underline">
+                        View All Settings →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="grid lg:grid-cols-3 gap-6 mt-6">
+            <!-- Recent Trips (Wider Section) -->
+            <div class="col-span-1 lg:col-span-2 bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold text-yellow-600 mb-4">Recent Trips</h2>
+                <div class="flex flex-col lg:flex-row gap-4 lg:gap-0 space-x-0  lg:space-x-4 overflow-x-auto">
+                    <!-- Recent Trip Item -->
+                    <div class="bg-gray-700 p-4 rounded-lg min-w-[250px] flex-shrink-0">
+                        <h3 class="text-lg font-semibold text-white">Paris</h3>
+                        <p class="text-sm text-gray-400">Start: 2024-12-20</p>
+                        <p class="text-sm text-gray-400">End: 2024-12-27</p>
+                        <p class="text-sm text-gray-400">Budget: $1,200</p>
+                        <p class="text-sm text-gray-400">Remaining: $200</p>
+                        <button class="mt-2 bg-yellow-600 text-white px-3 py-1 text-sm rounded hover:bg-yellow-500">View</button>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg min-w-[250px] flex-shrink-0">
+                        <h3 class="text-lg font-semibold text-white">London</h3>
+                        <p class="text-sm text-gray-400">Start: 2024-11-10</p>
+                        <p class="text-sm text-gray-400">End: 2024-11-20</p>
+                        <p class="text-sm text-gray-400">Budget: $900</p>
+                        <p class="text-sm text-gray-400">Remaining: $100</p>
+                        <button class="mt-2 bg-yellow-600 text-white px-3 py-1 text-sm rounded hover:bg-yellow-500">View</button>
+                    </div>
+                    <!-- Add more trip items here -->
+                </div>
+            </div>
+        
+            <!-- Upcoming Trips -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold text-yellow-600 mb-4">Upcoming Trips</h2>
+                <div class="space-y-4">
+                    <!-- Upcoming Trip Item -->
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-white">Rome</h3>
+                        <p class="text-sm text-gray-400">Start: 2024-12-30</p>
+                        <p class="text-sm text-gray-400">End: 2025-01-05</p>
+                        <p class="text-sm text-gray-400">Budget: $1,500</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-white">Tokyo</h3>
+                        <p class="text-sm text-gray-400">Start: 2025-03-15</p>
+                        <p class="text-sm text-gray-400">End: 2025-03-25</p>
+                        <p class="text-sm text-gray-400">Budget: $2,000</p>
+                    </div>
+                    <!-- Add more upcoming trip items here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const toggleButton = document.getElementById("toggleSidebar");
+    const closeButton = document.getElementById("closeSidebar");
+
+    // Toggle the sidebar visibility
+    toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("hidden");
+    });
+
+    // Close the sidebar when clicking the "X" button
+    closeButton.addEventListener("click", () => {
+        sidebar.classList.add("hidden");
+    });
+
+    // Optional: Close sidebar when clicking outside of it
+    document.addEventListener("click", (e) => {
+        if (!sidebar.contains(e.target) && !toggleButton.contains(e.target)) {
+            sidebar.classList.add("hidden");
+        }
+    });
+
+</script>
+{% endblock %}

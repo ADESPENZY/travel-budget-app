@@ -1,0 +1,112 @@
+{% extends 'Base.html' %}
+ 
+{% block main %}
+<div class="w-full add-form rounded-lg p-5 md:p-10">
+    <div class="bg-white rounded-xl p-5 flex flex-col md:flex-row justify-center h-full gap-5">
+        <!-- Left Section -->
+        <div class="w-full md:w-[40%] p-4">
+            <!-- Header Section -->
+            <div class="text-center mb-6">
+                <a href="/" class="text-4xl font-bold flex justify-center items-center gap-2 text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                    </svg>
+                    <h3 class="text-3xl"><span class="text-yellow-600">Travel</span>Budget</h3>
+                </a>
+            </div>
+            <p class="text-gray-600 text-center mb-8 leading-6 text-sm">
+                Where will your next adventure take you? Create a trip and start planning! Get access to personalized recommendations, itinerary tools, and more.
+            </p>
+
+            <!-- Form Section -->
+            <form action="{% url 'add_trip' %}" method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="trip_name" class="block text-gray-700 font-medium mb-2">Trip Name</label>
+                    <input type="text" id="trip_name" name="trip_name"  
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent" 
+                        placeholder="Give your trip a name" required>
+                    {% for error in form.trip_name.errors %}
+                        <small class="text-red-500">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label for="destination_name" class="block text-gray-700 font-medium mb-2">Destination Name</label>
+                    <input type="text" id="destination_name" name="destination_name" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent" 
+                        placeholder="Your preferred destination" required>
+                    {% for error in form.destination_name.errors %}
+                        <small class="text-red-500">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="w-full sm:w-1/2">
+                        <label for="start_date" class="block text-gray-700 font-medium mb-2">Start Date</label>
+                        <input type="date" id="start_date" name="start_date"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent">
+                        {% for error in form.start_date.errors %}
+                            <small class="text-red-500">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+
+                    <div class="w-full sm:w-1/2">
+                        <label for="end_date" class="block text-gray-700 font-medium mb-2">End Date</label>
+                        <input type="date" id="end_date" name="end_date" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent">
+                        {% for error in form.end_date.errors %}
+                            <small class="text-red-500">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="budget" class="block text-gray-700 font-medium mb-2">
+                        Budget {% if preferred_currency %} ({{ preferred_currency }}) {% endif %}
+                    </label>
+                    <input type="number" id="budget" name="budget" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent"
+                        placeholder="Enter your trip budget {% if preferred_currency %} in {{ preferred_currency }} {% endif %}" 
+                        required>
+                    {% for error in form.budget.errors %}
+                        <small class="text-red-500">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="flex flex-col lg:flex-row lg:justify-between gap-4">
+                    <!-- Create Trip Button -->
+                    <button type="submit" class="w-full  bg-yellow-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-yellow-600 transition duration-300">
+                        Create Trip
+                    </button>
+                    <!-- View Details Button -->
+                    <a href="{% url 'dashboard' %}" class="w-full bg-gray-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-gray-700 transition duration-300 text-center">
+                        Go To Dashboard
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Section -->
+        <div class="w-full md:w-[60%] add-form-side relative rounded-2xl shadow-xl overflow-hidden">
+            <!-- Cut-out Area -->
+            <div class="cut-out-box absolute top-0 right-0 bg-white shadow-lg p-5 w-52 rounded-bl-2xl hidden md:block">
+                <h4 class="font-bold text-lg text-gray-700">+89%</h4>
+                <p class="text-sm text-gray-600">
+                    Positive Response From People
+                </p>
+                <div class="absolute bottom-0 right-0 w-12 h-12 bg-yellow-500 rounded-tl-full"></div>
+            </div>
+            
+            <!-- Main Background Content -->
+            <div class="absolute bottom-0 w-full bg-gray-800 bg-opacity-60 text-white p-5 text-center">
+                <h4 class="text-lg font-bold">Plan Smarter</h4>
+                <p class="text-sm">
+                    Planning a trip can be overwhelming, but we're here to help. Create a trip and get access to personalized recommendations, itinerary building tools, and more.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

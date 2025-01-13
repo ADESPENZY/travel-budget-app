@@ -1,0 +1,98 @@
+{% extends 'Base.html' %}
+
+{% block main %}
+<div class="profile_detail p-0 md:p-10">
+    <div class="bg-gray-900 bg-opacity-35 md:w-[60%] h-full mx-auto p-8">
+        <div class="bg-gray-700 bg-opacity-35 w-full h-full rounded-lg p-8">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row items-center gap-5 md:justify-between">
+                <div class="flex items-center gap-4">
+                    <img src="{{ profile.image.url }}" alt="User Image" 
+                         class="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-lg">
+                    <div>
+                        <h1 class="text-yellow-400 text-xl md:text-2xl font-bold">
+                            {{ profile.firstname }} {{ profile.lastname }}
+                        </h1>
+                        <p class="text-gray-400">Traveler Profile</p>
+                    </div>
+                </div>
+                <a href="{% url 'update_profile' %}" class="bg-white text-black font-semibold py-2 px-6 rounded-lg shadow">
+                    Edit Profile
+                </a>
+            </div>
+
+            <div class="border-t border-gray-500 my-6"></div>
+
+            <!-- Profile Details Section -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-300 mb-6">Profile Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- StepOneForm Fields -->
+                    <div>
+                        <p class="text-gray-500 font-medium">First Name</p>
+                        <p class="text-gray-100">{{ profile.firstname }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Last Name</p>
+                        <p class="text-gray-100">{{ profile.lastname }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Date of Birth</p>
+                        <p class="text-gray-100">{{ profile.dob }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Bio</p>
+                        <p class="text-gray-100">{{ profile.bio }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Country</p>
+                        <p class="text-gray-100">{{ profile.country }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">City</p>
+                        <p class="text-gray-100">{{ profile.city }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Phone Number</p>
+                        <p class="text-gray-100">{{ profile.phone_number }}</p>
+                    </div>
+
+                    <!-- StepTwoForm Fields -->
+                    <div>
+                        <p class="text-gray-500 font-medium">Preferred Currency</p>
+                        <p class="text-gray-100">{{ profile.preferred_currency }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Travel Preferences</p>
+                        <p class="text-gray-100">{{ profile.travel_preferences }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Travel Frequency</p>
+                        <p class="text-gray-100">{{ profile.travel_frequency }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Favorite Destinations</p>
+                        <p class="text-gray-100">{{ profile.favorite_destinations }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Emergency Contact Name</p>
+                        <p class="text-gray-100">{{ profile.emergency_contact_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 font-medium">Emergency Contact Phone</p>
+                        <p class="text-gray-100">{{ profile.emergency_contact_phone }}</p>
+                    </div>
+
+
+                </div>
+                <!-- Next Step Button -->
+                <div class="mt-10 flex justify-center">
+                    <a href="{% url 'dashboard' %}" class=" px-4 py-2 bg-yellow-500 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        Back To Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,313 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block main %}
+<div class="bg-white-gray min-h-screen md:py-10">
+    <!-- Main Content Container -->
+    <div class="bg-white md:w-[80%] mx-auto p-0 md:p-10 shadow-lg rounded-lg">
+        <div class="flex justify-between items-center p-5">
+            <!-- Logo Section -->
+            <div>
+                <a href="/" class="text-4xl font-bold flex items-center gap-2 text-gray-700 hover:text-gray-900 transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                    </svg>
+                    <h3 class="text-3xl font-extrabold">
+                        <span class="text-yellow-600">Travel</span>Budget
+                    </h3>
+                </a>
+            </div>
+        
+            <!-- Hamburger Menu for Mobile -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 hover:text-gray-900 transition duration-300 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        
+            <!-- Navigation Section -->
+            <div id="nav-links" class="hidden md:flex space-x-8 text-lg font-medium text-gray-600">
+                <li class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3M17 16l4-4m0 0l-4-4m4 4H9" />
+                    </svg>    
+                    <a href="{% url 'dashboard' %}" class="hover:text-yellow-600 transition duration-300">Dashboard</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+                    </svg>
+                    <a href="{% url 'trip_list' %}" class="hover:text-yellow-600 transition duration-300">Trip List</a>
+                </li>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-nav" class="hidden flex-col space-y-4 text-lg font-medium text-gray-600 bg-white p-4 md:hidden">
+            <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3M17 16l4-4m0 0l-4-4m4 4H9" />
+                </svg>    
+                <a href="{% url 'dashboard' %}" class="hover:text-yellow-600 transition duration-300">Dashboard</a>
+            </li>
+            <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+                </svg>
+                <a href="{% url 'trip_list' %}" class="hover:text-yellow-600 transition duration-300">Trip List</a>
+            </li>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6 mt-10 w-full">
+            
+            <div class="bg-gray-50 p-6 rounded-lg shadow-md flex-1">
+        
+                <div class="flex flex-col items-center mb-6">
+                    <!-- Profile Image -->
+                    <div class="">
+                        {% if user.profile.image %}
+                            <img src="{{ user.profile.image.url }}" 
+                                alt="User Profile Image" 
+                                class="w-24 h-24 rounded-full border border-gray-300 shadow-md">
+                        {% else %}
+                            <img src="{% static 'image/default-profile.png' %}" 
+                                alt="Default Profile Image" 
+                                class="w-24 h-24 rounded-full border border-gray-300 shadow-md">
+                        {% endif %}
+                    </div>
+
+                    <!-- User Details -->
+                    <div>
+                        <h4 class="text-xl font-bold">{{ user.profile.firstname }} {{ user.profile.lastname }}</h4>
+                        <p class="text-gray-600">Preferred Currency: 
+                            {{ user.profile.preferred_currency|default:"Not Specified" }}
+                        </p>
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-bold mb-4 text-gray-700">Trip Information</h4>
+        
+                <!-- Trip Details -->
+                <div class="mb-4">
+                    <h5 class="font-semibold">Trip Name:</h5>
+                    <p>{{ trip.trip_name }}</p>
+                </div>
+        
+                <div class="mb-4">
+                    <h5 class="font-semibold">Destination:</h5>
+                    <p>{{ trip.destination_name }}</p>
+                </div>
+        
+                <div class="flex gap-4 mb-4">
+                    <div>
+                        <h5 class="font-semibold">Start Date:</h5>
+                        <p>{{ trip.start_date }}</p>
+                    </div>
+                    <div>
+                        <h5 class="font-semibold">End Date:</h5>
+                        <p>{{ trip.end_date }}</p>
+                    </div>
+                </div>
+        
+                <div>
+                    <h5 class="font-semibold">Trip Budget:</h5>
+                    <p>{{ trip.budget }}</p>
+                </div>
+            </div>
+        
+            <div class="bg-gray-50 p-6 rounded-lg shadow-md flex-1">
+                <h4 class="text-xl font-bold mb-4 text-gray-700">Expense vs Budget</h4>
+                <canvas id="expensePieChart" width="400" height="400"></canvas>
+                <div class="flex justify-between mt-4">
+                    <a href="{% url 'add-expense' trip.id %}" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded hover:bg-yellow-600">
+                        Add Expenses
+                    </a>
+                    <a href="{% url 'expense-list' trip.id %}" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded hover:bg-yellow-600">
+                        View Expenses
+                    </a>
+                </div>
+            </div>
+        
+            <div class="bg-gray-50 p-6 rounded-lg shadow-md flex-1 ">
+                <h4 class="text-xl font-bold mb-4 text-gray-700">Categories For Trip</h4>
+                <ul class="space-y-4">
+                    {% for category_budget in trip.category_budgets.all %}
+                        <li class="flex justify-between items-center bg-white p-4 rounded-md shadow-sm border border-gray-200">
+                            <div>
+                                <h5 class="text-gray-800 font-semibold">{{ category_budget.category }}</h5>
+                            </div>
+                            <div class="space-x-2">
+                                <a href="" 
+                                   class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                                    Edit
+                                </a>
+                                <a href="" 
+                                   class="text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
+                                    Delete
+                                </a>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <p class="text-gray-500 italic">No categories with itineraries available.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+        </div>      
+        <div class="flex flex-col md:flex-row gap-6 mt-10">
+            <!-- Trip-level Pie Chart -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-md md:w-2/3">
+                <h4 class="text-xl font-bold mb-4 text-gray-700">Trip Budget Overview</h4>
+                <canvas id="dailyBarChart" width="400" height="250"></canvas>
+            </div>
+        
+            <!-- Itinerary-level Pie Chart -->
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md md:w-1/3">
+                <h4 class="text-lg font-bold mb-2 text-gray-700">Itinerary Budget Overview</h4>
+                <canvas id="itineraryPieChart" width="400" height="400"></canvas>
+                <div class="flex justify-between mt-4">
+                    <a href="{% url 'add_itinerary' trip.id %}" class="bg-yellow-600 text-gray-900 px-4 py-2 rounded hover:bg-yellow-500">
+                        Add Itineraries
+                    </a>
+                    <a href="{% url 'expense-list' trip.id %}" class="bg-yellow-600 text-gray-900 px-4 py-2 rounded hover:bg-yellow-500">
+                        View Itineraries
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const pieChartData = {{ pie_chart_data|safe }};
+    console.log(pieChartData);
+
+    const ctx = document.getElementById('expensePieChart').getContext('2d');
+    const expensePieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: pieChartData.labels,
+            datasets: [{
+                label: 'Budget Breakdown',
+                data: pieChartData.data,  // This should be an array of numbers, like [1000, 500]
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)', // Expenses color
+                    'rgba(54, 162, 235, 0.2)', // Remaining budget color
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)', // Border color for expenses
+                    'rgba(54, 162, 235, 1)', // Border color for remaining budget
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const value = tooltipItem.raw.toLocaleString(undefined, {
+                                style: 'currency',
+                                currency: 'USD'
+                            });
+                            return `${tooltipItem.label}: ${value}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    const itineraryPieChartData = {{ itinerary_pie_chart_data | safe }};
+    console.log(itineraryPieChartData);
+
+    const itineraryCtx = document.getElementById('itineraryPieChart').getContext('2d');
+    const itineraryPieChart = new Chart(itineraryCtx, {
+        type: 'pie',
+        data: {
+            labels: itineraryPieChartData.labels,
+            datasets: [{
+                label: 'Itinerary Budget Breakdown',
+                data: itineraryPieChartData.data, // Array of numbers, e.g., [500, 200, 300]
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)', // Color 1
+                    'rgba(153, 102, 255, 0.2)', // Color 2
+                    'rgba(255, 206, 86, 0.2)',  // Color 3
+                    'rgba(54, 162, 235, 0.2)',  // Color 4
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)', 
+                    'rgba(153, 102, 255, 1)', 
+                    'rgba(255, 206, 86, 1)',  
+                    'rgba(54, 162, 235, 1)',  
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true, // Keep the chart proportional
+            plugins: {
+                legend: {
+                    position: 'bottom', // Position legend below the chart
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const value = tooltipItem.raw.toLocaleString(undefined, {
+                                style: 'currency',
+                                currency: 'USD'
+                            });
+                            return `${tooltipItem.label}: ${value}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    const dailyBarChartData = {{ daily_bar_chart_data|safe }};
+    const barCtx = document.getElementById('dailyBarChart').getContext('2d');
+    const dailyBarChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: dailyBarChartData.labels,
+            datasets: [{
+                label: 'Daily Expenses',
+                data: dailyBarChartData.data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Daily Expenses' }
+            }
+        }
+    });
+
+</script>
+
+<script>
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+});
+</script>
+
+
+{% endblock %}

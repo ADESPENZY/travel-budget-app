@@ -1,0 +1,88 @@
+{% extends 'Base.html' %}
+{% load static %}
+
+{% block main %}
+<section class="flex flex-col justify-center items-center signup-bg" >
+        <!-- section for messages -->
+        <section>
+            {% if messages %}
+            <div class="w-full max-w-md mx-auto mt-4 space-y-4">
+            {% for message in messages %}
+                <div class="
+                    {% if message.tags == 'success' %}bg-green-100 text-green-800 border-green-400
+                    {% elif message.tags == 'error' %}bg-red-100 text-red-800 border-red-400
+                    {% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800 border-yellow-400
+                    {% elif message.tags == 'info' %}bg-blue-100 text-blue-800 border-blue-400
+                    {% else %}bg-gray-100 text-gray-800 border-gray-400
+                    {% endif %}
+                    border-l-4 p-4 rounded-md
+                ">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        </section>
+    
+    <div class="bg-gray-900 bg-opacity-90 shadow-lg rounded-lg p-8 w-full max-w-md">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-serif text-white">Sign Up Here</h1>
+        </div>
+
+        <!-- Sign-up form -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Username -->
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter Your Username" required 
+                       class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter Your Email" required
+                       class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label for="password1" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                <input type="password" name="password1" id="password1" placeholder="Enter Your Password" required
+                       class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label for="password2" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
+                <input type="password" name="password2" id="password2" placeholder="Confirm Your Password" required
+                       class="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full bg-teal-500 text-white py-2 px-4 rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-teal-300">
+                Sign Up
+            </button>
+        </form>
+        <!-- form ends -->
+
+        <div class="text-center mt-6 text-gray-400">
+            <span>Already have an account? 
+                <a href="{% url 'login-page' %}" class="text-teal-400 font-semibold hover:underline">Sign In</a>
+            </span>
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-500">
+                By clicking “Sign up,” you agree to Medium's 
+                <a href="#" class="text-teal-400 hover:underline">Terms of Service</a> and 
+                acknowledge Medium’s 
+                <a href="#" class="text-teal-400 hover:underline">Privacy Policy</a>.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

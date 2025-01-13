@@ -1,0 +1,14 @@
+{% extends 'Base.html' %}
+
+
+{% block main %}
+
+<h2>Add Expense for {{ trip.name }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Expense</button>
+</form>
+    
+{% endblock %}
+    

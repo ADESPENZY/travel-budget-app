@@ -1,0 +1,157 @@
+{% extends 'Base.html' %}
+{% load static %}
+{% block main %}
+<div class="bg-white-gray min-h-screen p-5">
+    <!-- Trip Name -->
+    <div>
+        <h3 class="text-2xl font-bold text-gray-800 uppercase mb-6">
+            {{ trip.trip_name }} TRIP DETAIL PAGE
+        </h3>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+        <!-- Left Section (Trip Image and Categories) -->
+        <div class="bg-yellow-50 h-full md:w-[30%] p-4 border-r border-yellow-300 shadow-lg">
+            <div class="flex flex-col items-center gap-4 mb-6 text-center border-b border-yellow-300 pb-5">
+                <!-- Profile Image -->
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}"
+                         alt="User Profile Image"
+                         class="w-32 h-32 rounded-full border border-gray-300 shadow-md">
+                {% else %}
+                    <img src="{% static 'image/default-profile.png' %}"
+                         alt="Default Profile Image"
+                         class="w-32 h-32 rounded-full border border-gray-300 shadow-md">
+                {% endif %}
+                
+                <!-- User Details -->
+                <div>
+                    <h4 class="text-xl font-bold">{{ user.profile.firstname }} {{ user.profile.lastname }}</h4>
+                    <p class="text-gray-600">Preferred Currency: 
+                        {{ user.profile.preferred_currency|default:"Not Specified" }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h5 class="text-lg font-bold text-gray-800">Trip Categories</h5>
+                    <a href="{% url 'trip_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                        Add New Category
+                    </a>
+                </div>
+                <ul class="space-y-3">
+                    {% for category in category_data %}
+                        <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                            <div>
+                                <h6 class="font-semibold text-gray-700">{{ category.name }}</h6>
+                                <p class="text-gray-600">Budget: {{ category.budget }}</p>
+                                <p class="text-gray-600">Total Spent: {{ category.total_expenses }}</p>
+                                <p class="text-gray-600">Remaining Budget: {{ category.remaining_budget }}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <!-- Edit Button -->
+                                <a href="" class="text-yellow-500 hover:text-yellow-600 font-semibold">Edit</a>
+
+                                <!-- Delete Button -->
+                                <a href="" class="text-yellow-500 hover:text-yellow-600 font-semibold">Delete</a>
+                                
+                            </div>
+                        </li>
+                    {% empty %}
+                        <p class="text-gray-500 italic">No categories added yet for this trip.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Section (Trip Information and Itineraries) -->
+        <div class="bg-white h-full md:w-[70%] p-6 shadow-lg rounded-lg">
+            <!-- Trip Information -->
+            <div>
+                <h4 class="text-lg font-bold text-gray-800 mb-4">Trip Information</h4>
+
+                <!-- Trip Name -->
+                <div class="mb-4 p-4 border border-gray-300 rounded-lg">
+                    <h5 class="text-gray-800 font-semibold">Trip Name</h5>
+                    <p class="text-gray-700">{{ trip.trip_name }}</p>
+                </div>
+
+                <!-- Dates Section -->
+                <div class="flex gap-4 mb-4">
+                    <!-- Start Date -->
+                    <div class="flex-1 p-4 border border-gray-300 rounded-lg text-center">
+                        <h5 class="text-gray-800 font-semibold">Start Date</h5>
+                        <p class="text-gray-700">{{ trip.start_date }}</p>
+                    </div>
+                    <!-- End Date -->
+                    <div class="flex-1 p-4 border border-gray-300 rounded-lg text-center">
+                        <h5 class="text-gray-800 font-semibold">End Date</h5>
+                        <p class="text-gray-700">{{ trip.end_date }}</p>
+                    </div>
+                </div>
+
+                <!-- Expense Section -->
+                <div class="mt-6 p-4 border border-gray-300 rounded-lg">
+                    <div class="mt-6 p-4 border border-gray-300 rounded-lg">
+                        <h5 class="text-gray-800 font-semibold">Total Budget</h5>
+                        <p class="text-gray-700">${{ total_trip_budget }} {{ user.profile.preferred_currency|default:"USD" }}</p>
+                    
+                        <h5 class="text-gray-800 font-semibold mt-4">Total Expenses</h5>
+                        <p class="text-gray-700">${{ total_trip_expenses }} {{ user.profile.preferred_currency|default:"USD" }}</p>
+                    
+                        <h5 class="text-gray-800 font-semibold mt-4">Remaining Budget</h5>
+                        <p class="text-gray-700">${{ remaining_budget }} {{ user.profile.preferred_currency|default:"USD" }}</p>
+                    </div>
+                    
+                    <div class="flex justify-between mt-4">
+                        <a href="{% url 'add-expense' trip.id %}" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded hover:bg-yellow-600">
+                            Add Expenses
+                        </a>
+                        <a href="{% url 'expense-list' trip.id %}" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded hover:bg-yellow-600">
+                            View Expenses
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Itineraries Section -->
+            <div class="mt-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-lg font-bold text-gray-800">Trip Itineraries</h4>
+                    <!-- Add Itinerary Button -->
+                    <a href="{% url 'add_itinerary' trip.id %}" 
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                        Add Itinerary
+                    </a>
+                </div>
+
+                <ul class="space-y-3">
+                    {% for category_budget in trip.category_budgets.all %}
+                        <li>
+                            <h5 class="text-gray-800 font-bold mb-2">{{ category_budget.category }}</h5>
+                            <ul class="space-y-2">
+                                {% for itinerary in category_budget.itineraries.all %}
+                                    <li class="bg-gray-50 p-4 rounded-lg shadow-md">
+                                        <h6 class="font-semibold text-gray-700">{{ itinerary.title }}</h6>
+                                        <p class="text-sm text-gray-500">Details: {{ itinerary.details|default:"No details provided" }}</p>
+                                        <p class="text-sm text-gray-500">Start Time: {{ itinerary.start_time }}</p>
+                                        <p class="text-sm text-gray-500">End Time: {{ itinerary.end_time|default:"Not specified" }}</p>
+                                        <p class="text-sm text-gray-500">Budget: ${{ itinerary.budget }}</p>
+                                    </li>
+                                {% empty %}
+                                    <p class="text-gray-500 italic">No itineraries added yet for this category.</p>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% empty %}
+                        <p class="text-gray-500 italic">No categories with itineraries available.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

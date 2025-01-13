@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Background styles for signup and login */
+.signup-bg {
+    background-image: url('/static/image/travel1.jpg');
+    @apply bg-cover bg-center min-h-screen;
+}
+
+.login-bg {
+    background-image: url('/static/image/travel2.jpg');
+    @apply bg-cover bg-center min-h-screen;
+}
+
+.add-form {
+    background-image: url('/static/image/add_form_image.jpg');
+    @apply bg-cover bg-center min-h-screen;
+}
+
+.update-form {
+    background-image: url('/static/image/update_form_image.jpg');
+    @apply bg-cover bg-center min-h-screen;
+}
+
+.add-form-side {
+    background-image: url('/static/image/add_form_image.jpg');
+    @apply bg-cover bg-center;
+}
+
+.update-form-side {
+    background-image: url('/static/image/update_form_image.jpg');
+    @apply bg-cover bg-center;
+}
+
+.profile_detail {
+    background-image: url('/static/image/profile_detail.jpg');
+    @apply bg-cover bg-center;
+}
+
+/* Styling for intl-tel-input */
+.iti__selected-flag {
+    top: 6px;
+    height: 33px !important;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+input#phone {
+    padding-left: 52px !important;
+}
+
+.intl-tel-input {
+    z-index: 99;
+    width: 100%;
+}
+
+.iti-flag {
+    box-shadow: none;
+}
+
+.iti__country-list {
+    border-radius: 4px !important;
+    z-index: 999 !important;
+    box-shadow: 0 0 16px 0 rgb(0 0 0 / 8%) !important;
+    border: 1px solid #ececec !important;
+    width: 270px !important;
+}
+
+.iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
+    background-color: rgba(0, 0, 0, 0.05);
+}

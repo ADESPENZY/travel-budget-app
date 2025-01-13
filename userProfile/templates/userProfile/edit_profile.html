@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="w-full p-0 md:p-10 bg-gray-700 md:h-screen rounded-lg">
+    <div class="flex flex-col md:flex-row justify-center h-full rounded-md">
+        <!-- Left Side (40%) -->
+        <div class="md:w-[40%] bg-gray-800 p-10 shadow-lg text-white">
+            <!-- Logo Section -->
+            <div class="mb-10">
+                <a href="/" class="text-4xl font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                    </svg>
+                    <span class="text-yellow-600">Travel</span>Budget
+                </a>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2 text-yellow-600">Hello {{ user.username }}</h3>
+                <h3 class="text-lg font-medium mb-4">Update Your Profile</h3>
+                <p class="text-gray-300 leading-6 text-xs">
+                    Keep your profile updated to ensure you get the most personalized experience and stay connected with 
+                    <span class="text-yellow-600 font-semibold">TravelBudget</span>.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side (60%) -->
+        <div class="md:w-[60%] bg-white p-10 shadow-lg overflow-y-auto">
+            <!-- Display General Messages -->
+            {% if messages %}
+            <div class="w-full p-4">
+                {% for message in messages %}
+                <div class="p-3 rounded-lg mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3 class="text-2xl font-bold text-gray-700 mb-6">Let's Get Started</h3>
+            
+                <!-- First Name, Last Name and City Inputs -->
+                <div class="flex flex-col md:flex-row gap-6 mt-5">
+                    <div class="w-full">
+                        <label for="firstname" class="block text-gray-600 text-sm font-medium mb-2">First Name</label>
+                        <input type="text" id="firstname" name="firstname" value="{{ step_one_form.firstname.value }}" placeholder="Enter your first name"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                        {% if step_one_form.firstname.errors %}
+                            <small class="text-red-700">{{ step_one_form.firstname.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+            
+                    <div class="w-full">
+                        <label for="lastname" class="block text-gray-600 text-sm font-medium mb-2">Last Name</label>
+                        <input type="text" id="lastname" name="lastname" value="{{ step_one_form.lastname.value }}" placeholder="Enter your last name"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                        {% if step_one_form.lastname.errors %}
+                            <small class="text-red-700">{{ step_one_form.lastname.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <div class="w-full mt-5">
+                    <label for="city" class="block text-gray-600 text-sm font-medium mb-2">State</label>
+                    <input type="text" id="city" name="city" value="{{ step_one_form.city.value }}" placeholder="Enter your State"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                    {% if step_one_form.city.errors %}
+                        <small class="text-red-700">{{ step_one_form.city.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            
+                <!-- Phone Number and Country Inputs -->
+                <div class="flex flex-col md:flex-row gap-6 mt-5">
+                    <div class="w-full relative">
+                        <label for="phone_number" class="block text-gray-600 text-sm font-medium mb-2">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" value="{{ step_one_form.phone_number.value }}" placeholder="Enter your phone number"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                        {% if step_one_form.phone_number.errors %}
+                            <small class="text-red-700">{{ step_one_form.phone_number.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+            
+                    <div class="w-full">
+                        <label for="country" class="block text-gray-600 text-sm font-medium mb-2">Country of Residence</label>
+                        <select id="country" name="country" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                            <!-- Dynamically populate the options -->
+                            {% for country in countries %}
+                                <option value="{{ country }}" {% if step_one_form.country.value == country %} selected {% endif %}>{{ country }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if step_one_form.country.errors %}
+                            <small class="text-red-700">{{ step_one_form.country.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <!-- Bio and Date of Birth Inputs -->
+                <div class="w-full mt-5">
+                    <label for="bio" class="block text-gray-600 text-sm font-medium mb-2">Bio</label>
+                    <textarea id="bio" name="bio" rows="4" placeholder="Enter your bio"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">{{ step_one_form.bio.value }}</textarea>
+                    {% if step_one_form.bio.errors %}
+                        <small class="text-red-700">{{ step_one_form.bio.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            
+                <div class="w-full mt-5">
+                    <label for="dob" class="block text-gray-600 text-sm font-medium mb-2">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" value="{{ step_one_form.dob.value }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                    {% if step_one_form.dob.errors %}
+                        <small class="text-red-700">{{ step_one_form.dob.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Preferred Currency -->
+                    <div class="w-full">
+                        <label for="preferred_currency" class="block text-gray-600 text-sm font-medium mb-2">Preferred Currency</label>
+                        <select id="preferred_currency" name="preferred_currency" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                            <option value="">Select your preferred currency</option>
+                            {% for key, value in step_two_form.fields.preferred_currency.choices %}
+                                <option value="{{ key }}" {% if step_two_form.instance.preferred_currency == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if step_two_form.preferred_currency.errors %}
+                            <small class="text-danger">{{ step_two_form.preferred_currency.errors }}</small>
+                        {% endif %}
+                    </div>
+            
+                    <!-- Travel Preferences -->
+                    <div class="w-full">
+                        <label for="travel_preferences" class="block text-gray-600 text-sm font-medium mb-2">Travel Preferences</label>
+                        <select id="travel_preferences" name="travel_preferences" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                            <option value="">Select your travel preference</option>
+                            {% for key, value in step_two_form.fields.travel_preferences.choices %}
+                                <option value="{{ key }}" {% if step_two_form.instance.travel_preferences == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if step_two_form.travel_preferences.errors %}
+                            <small class="text-danger">{{ step_two_form.travel_preferences.errors }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <!-- Travel Frequency -->
+                <div class="w-full mt-5">
+                    <label for="travel_frequency" class="block text-gray-600 text-sm font-medium mb-2">Travel Frequency</label>
+                    <select id="travel_frequency" name="travel_frequency" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                        <option value="">Select your travel frequency</option>
+                        {% for key, value in step_two_form.fields.travel_frequency.choices %}
+                            <option value="{{ key }}" {% if step_two_form.instance.travel_frequency == key %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if step_two_form.travel_frequency.errors %}
+                        <small class="text-danger">{{ step_two_form.travel_frequency.errors }}</small>
+                    {% endif %}
+                </div>
+            
+                <!-- Favorite Destinations -->
+                <div class="w-full">
+                    <label for="favorite_destinations" class="block text-gray-600 text-sm font-medium mb-2">Favorite Destinations</label>
+                    <input type="text" id="favorite_destinations" name="favorite_destinations" 
+                           value="{{ step_two_form.favorite_destinations.value }}" placeholder="Enter your Favorite Destinations"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                    {% if step_two_form.favorite_destinations.errors %}
+                        <small class="text-danger">{{ step_two_form.favorite_destinations.errors }}</small>
+                    {% endif %}
+                </div>
+            
+                <div class="flex flex-col md:flex-row gap-6 mt-5">
+                    <!-- Emergency Contact Phone -->
+                    <div class="w-full relative">
+                        <label for="emergency_contact_phone" class="block text-gray-600 text-sm font-medium mb-2">Emergency Contact Phone</label>
+                        <input type="tel" id="emergency_contact_phone" name="emergency_contact_phone" 
+                               value="{{ step_two_form.emergency_contact_phone.value }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                        {% if step_two_form.emergency_contact_phone.errors %}
+                            <small class="text-danger">{{ step_two_form.emergency_contact_phone.errors }}</small>
+                        {% endif %}
+                    </div>
+            
+                    <!-- Emergency Contact Name -->
+                    <div class="w-full">
+                        <label for="emergency_contact_name" class="block text-gray-600 text-sm font-medium mb-2">Emergency Contact Name</label>
+                        <input type="text" id="emergency_contact_name" name="emergency_contact_name" 
+                               value="{{ step_two_form.emergency_contact_name.value }}" placeholder="Enter Emergency Contact Name"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700" required>
+                        {% if step_two_form.emergency_contact_name.errors %}
+                            <small class="text-danger">{{ step_two_form.emergency_contact_name.errors }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            
+                <!-- Profile Image -->
+                <div class="w-full mt-5">
+                    <label for="profile_image" class="block text-gray-600 text-sm font-medium mb-2">Upload Profile Image</label>
+                    <input type="file" id="profile_image" name="image" 
+                           accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent text-gray-700">
+                    {% if step_two_form.image.errors %}
+                        <small class="text-danger">{{ step_two_form.image.errors }}</small>
+                    {% endif %}
+                </div>
+            
+                <!-- Buttons Section -->
+                <div class="mt-10 flex justify-center gap-4">
+                    <!-- Continue Button -->
+                    <button type="submit" 
+                            class="px-6 py-2 w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-600 shadow transition duration-300">
+                        Submit
+                    </button>
+                    <!-- Detail Page Button -->
+                    <a href="{% url 'profile_detail' %}" 
+                    class="px-6 py-2 bg-gray-800 w-full text-center hover:bg-gray-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 shadow transition duration-300">
+                        View Details
+                    </a>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
+<script>
+// International telephone format
+// $("#phone").intlTelInput();
+// get the country data from the plugin
+var countryData = window.intlTelInputGlobals.getCountryData(),
+  input = document.querySelector("#phone_number"),
+  addressDropdown = document.querySelector("#country");
+
+// init plugin
+var iti = window.intlTelInput(input, {
+  hiddenInput: "full_phone",
+  utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // just for formatting/placeholders etc
+});
+
+// populate the country dropdown
+for (var i = 0; i < countryData.length; i++) {
+  var country = countryData[i];
+  var optionNode = document.createElement("option");
+  optionNode.value = country.iso2;
+  var textNode = document.createTextNode(country.name);
+  optionNode.appendChild(textNode);
+  addressDropdown.appendChild(optionNode);
+}
+// set it's initial value
+addressDropdown.value = iti.getSelectedCountryData().iso2;
+
+// listen to the telephone input for changes
+input.addEventListener('countrychange', function(e) {
+  addressDropdown.value = iti.getSelectedCountryData().iso2;
+});
+
+// listen to the address dropdown for changes
+addressDropdown.addEventListener('change', function() {
+  iti.setCountry(this.value);
+});
+</script>
+<script>
+//Append Value To Phone Field
+$("#phone_number").prop('value', '+1 ');
+</script>
+
+<!-- For the Emergency Contact Phone -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
+<script>
+// International telephone format
+// $("#phone").intlTelInput();
+// get the country data from the plugin
+var countryData = window.intlTelInputGlobals.getCountryData(),
+  input = document.querySelector("#emergency_contact_phone"),
+  addressDropdown = document.querySelector("#country");
+
+// init plugin
+var iti = window.intlTelInput(input, {
+  hiddenInput: "full_phone",
+  utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // just for formatting/placeholders etc
+});
+
+// populate the country dropdown
+for (var i = 0; i < countryData.length; i++) {
+  var country = countryData[i];
+  var optionNode = document.createElement("option");
+  optionNode.value = country.iso2;
+  var textNode = document.createTextNode(country.name);
+  optionNode.appendChild(textNode);
+  addressDropdown.appendChild(optionNode);
+}
+// set it's initial value
+addressDropdown.value = iti.getSelectedCountryData().iso2;
+
+// listen to the telephone input for changes
+input.addEventListener('countrychange', function(e) {
+  addressDropdown.value = iti.getSelectedCountryData().iso2;
+});
+
+// listen to the address dropdown for changes
+addressDropdown.addEventListener('change', function() {
+  iti.setCountry(this.value);
+});
+</script>
+<script>
+//Append Value To Phone Field
+$("#emergency_contact_phone").prop('value', '+1 ');
+</script>
+
+{% endblock %}

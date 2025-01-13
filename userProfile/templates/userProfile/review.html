@@ -1,0 +1,164 @@
+{% extends 'Base.html' %}
+
+
+{% block main %}
+{% load static %}
+<div class="w-full p-0 md:p-10 bg-gray-700 md:h-screen rounded-lg">
+    <div class="flex flex-col md:flex-row justify-center h-full rounded-md">
+        <!-- Left Side (40%) -->
+        <div class="md:w-[40%] bg-gray-800 p-10 shadow-lg text-white">
+            <!-- Logo Section -->
+            <div class="mb-10">
+                <a href="/" class="text-2xl md:text-4xl font-bold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                    </svg>
+                    <span class="text-yellow-600">Travel</span>Budget
+                </a>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2 text-yellow-400">Welcome {{ user.username }}</h3>
+                <h3 class="text-lg font-medium mb-4">Let's Get Started With Your Profile</h3>
+                <p class="text-gray-300 leading-6 text-xs">
+                    Welcome to <span class="text-yellow-600 font-semibold">TravelBudget</span>! By updating your profile, you'll get access to customized travel suggestions, budget tracking,
+                    and exclusive deals. Make the most of TravelBudget's features and start planning your next adventure!
+                </p>
+            </div>
+
+            <!-- Slider Section -->
+            <div class="border-t border-gray-600 pt-4 mt-4 w-full max-w-lg">
+                <h3 class="text-yellow-400 text-lg font-medium mb-4">What Our Users Say</h3>
+                <div class="relative overflow-hidden">
+                    <div id="slider" class="flex transition-transform duration-500">
+                        <div class="w-full flex-shrink-0">
+                            <div class="bg-gray-900 p-4 rounded-md shadow-md">
+                                <p class="text-gray-300 text-sm italic">"TravelBudget made planning my trip so much easier! I managed to stay within budget while enjoying every moment."</p>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <img src="https://via.placeholder.com/40" alt="User Image" class="w-10 h-10 rounded-full">
+                                    <span class="text-gray-400 text-sm font-medium">- John Doe</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more cards as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side (60%) -->
+        <div class="md:w-[60%] bg-white p-10 shadow-lg overflow-y-auto">
+            {% if messages %}
+            <div class="w-full p-4">
+                {% for message in messages %}
+                <div class="p-3 rounded-lg mb-4 {% if message.tags == 'success' %}bg-green-100 text-green-700{% elif message.tags == 'error' %}bg-red-100 text-red-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Profile Details -->
+            <div class="w-full mt-8">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6">Review Your Application</h1>
+                <div class="pb-8 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Profile Details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">First Name:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.firstname }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Last Name:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.lastname }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Date of Birth:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.dob }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Bio:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.bio }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Country:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.country }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">City:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.city }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Phone Number:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.phone_number }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Preferred Currency:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.preferred_currency }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Travel Preferences:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.travel_preferences }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Travel Frequency:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.travel_frequency }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Favorite Destinations:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.favorite_destinations }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Emergency Contact Name:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.emergency_contact_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Emergency Contact Phone:</p>
+                            <p class="text-lg font-medium text-gray-800">{{ review_data.emergency_contact_phone }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Image -->
+                {% if review_data.image %}
+                <div class="py-8 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Profile Image</h2>
+                    <img src="{{ review_data.image.url }}" alt="Profile Image" class="w-32 h-32 rounded-full border border-gray-300">
+                </div>
+                {% else %}
+                <p class="text-gray-500">No profile image uploaded...</p>
+                {% endif %}
+
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between mt-6">
+                    <!-- Back Button -->
+                    <a href="{% url 'step_two' %}" 
+                        class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-400">
+                        Back
+                    </a>
+
+                    <!-- Continue/Submit Button -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" 
+                            class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-400">
+                            Continue
+                        </button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+                
+                
+            </div>
+    </div>
+</div>
+
+    
+{% endblock %}
+    

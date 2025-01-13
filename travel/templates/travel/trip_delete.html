@@ -1,0 +1,21 @@
+{% extends 'Base.html' %}
+
+{% block main %}
+    <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg max-w-xl mt-10">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Are you sure you want to delete the trip: <span class="text-red-500">{{ trip.trip_name }}</span>?</h2>
+        
+        <p class="text-gray-600 mb-6">This action cannot be undone.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="flex justify-between gap-4">
+                <button type="submit" class="px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                    Confirm
+                </button>
+                <a href="{% url 'trip_list' %}" class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
