@@ -1,0 +1,24 @@
+# Python-related
+*.pyc
+__pycache__/
+
+# Environment Variables
+.env
+
+# Django-related
+db.sqlite3
+/media/
+
+# Static files (optional, if you don't want to push them yet)
+/static/
+
+# Node.js-related (for Tailwind and similar tools)
+node_modules/
+
+# Virtual environments
+venv/
+.venv/
+
+# IDE settings
+.idea/
+*.vscode/
