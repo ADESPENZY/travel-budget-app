@@ -138,11 +138,11 @@
                                 <h5 class="text-gray-800 font-semibold">{{ category_budget.category }}</h5>
                             </div>
                             <div class="space-x-2">
-                                <a href="" 
+                                <a href="{% url 'edit_category_budget' trip.id category_budget.id %}" 
                                    class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors">
                                     Edit
                                 </a>
-                                <a href="" 
+                                <a href="{% url 'delete_category_budget' trip.id category_budget.id %}" 
                                    class="text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
                                     Delete
                                 </a>

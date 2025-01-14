@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TripForm, ItineraryForm, CategoryBudgetForm
 from django.contrib import messages
-from .models import Trip, Itinerary
+from .models import Trip, Itinerary, CategoryBudget
 from userProfile.models import User_Profile
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
@@ -117,6 +117,14 @@ def delete_trip(request, trip_id):
 @login_required
 def create_category_budget(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    # Retrieve the user's preferred currency
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency = None
+        preferred_currency_symbol = None  # Fallback if no profile exists
 
     if request.method == 'POST':
         form = CategoryBudgetForm(request.POST)
@@ -134,6 +142,54 @@ def create_category_budget(request, trip_id):
     return render(request, 'travel/category_budget.html', {
         'form': form,
         'trip': trip,
+        'preferred_currency': preferred_currency,
+        'preferred_currency_symbol': preferred_currency_symbol
+    })
+
+@login_required
+def edit_category_budget(request, trip_id, category_budget_id):
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    category_budget = get_object_or_404(CategoryBudget, id=category_budget_id, trip=trip)
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency = None
+        preferred_currency_symbol = None  # Fallback if no profile exists
+
+    if request.method == 'POST':
+        form = CategoryBudgetForm(request.POST, instance=category_budget)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Category budget for {category_budget.category} updated successfully!")
+            return redirect('trip_detail', trip_id=trip.id)
+        else:
+            messages.error(request, "Failed to update category budget. Please check the form.")
+    else:
+        form = CategoryBudgetForm(instance=category_budget)
+
+    return render(request, 'travel/edit_category_budget.html', {
+        'form': form,
+        'trip': trip,
+        'category_budget': category_budget,
+        'preferred_currency': preferred_currency,
+        'preferred_currency_symbol': preferred_currency_symbol
+    })
+
+@login_required
+def delete_category_budget(request, trip_id, category_budget_id):
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    category_budget = get_object_or_404(CategoryBudget, id=category_budget_id, trip=trip)
+
+    if request.method == 'POST':
+        category_budget.delete()
+        messages.success(request, f"Category budget for {category_budget.category} deleted successfully!")
+        return redirect('trip_detail', trip_id=trip.id)
+
+    return render(request, 'travel/confirm_delete_category_budget.html', {
+        'trip': trip,
+        'category_budget': category_budget,
     })
 
 @login_required
