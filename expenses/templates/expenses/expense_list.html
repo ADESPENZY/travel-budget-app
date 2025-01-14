@@ -1,39 +1,110 @@
-{% extends 'Base.html' %}
+{% extends 'base.html' %}
 
 
 {% block main %}
+<div class="bg-yellow-gray min-h-screen py-10">
+    <div class="md:w-[80%] w-full mx-auto bg-white rounded-lg shadow-lg">
+        <!-- Header Section -->
+        <div class="p-5 bg-gray-200 flex justify-between items-center rounded-t-lg">
+            <h2 class="text-2xl font-bold text-gray-700">Expenses List</h2>
+            <div class="space-x-4">
+                <a href="#" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
+                <a href="#" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
+            </div>
+        </div>
 
-<h2>Expenses for {{ trip.name }}</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Receipt</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for expense in expenses %}
-        <tr>
-            <td>{{ expense.category.name }}</td>
-            <td>{{ expense.description }}</td>
-            <td>${{ expense.amount }}</td>
-            <td>{{ expense.date }}</td>
-            <td>
-                {% if expense.receipt %}
-                <a href="{{ expense.receipt.url }}">View Receipt</a>
-                {% else %}
-                N/A
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="{% url 'add-expense' trip.id %}">Add Expense</a>
+        <!-- Expenses List Section -->
+        <div class="p-5">
+            <div class="flex justify-between mb-4">
+                <!-- Filter Dropdown -->
+                <form method="GET">
+                    <select name="category" class="border-gray-300 rounded px-5 py-2" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
+                                {{ category }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            
+                <form method="get" id="sortForm">
+                    {% for key, value in request.GET.items %}
+                        {% if key != 'sort' %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endif %}
+                    {% endfor %}
+                    <select
+                        name="sort"
+                        class="border-gray-300 rounded px-3 py-2"
+                        onchange="document.getElementById('sortForm').submit();">
+                        <option value="">Sort by</option>
+                        <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Date</option>
+                        <option value="amount" {% if request.GET.sort == "amount" %}selected{% endif %}>Amount</option>
+                    </select>
+                </form>
+            </div>
 
-    
+            <!-- Expenses Table -->
+            <table class="w-full border-collapse border border-gray-300">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="border border-gray-300 px-4 py-2">Date</th>
+                        <th class="border border-gray-300 px-4 py-2">Category</th>
+                        <th class="border border-gray-300 px-4 py-2">Description</th>
+                        <th class="border border-gray-300 px-4 py-2">Amount</th>
+                        <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">{{ expense.date }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ expense.category.category }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ expense.description }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">
+                            ${{ expense.amount }}
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">
+                            <!-- Edit Icon -->
+                            <a href="" class="text-blue-500 hover:text-blue-700">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <!-- Delete Icon -->
+                            <form action="" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+
+        <!-- Pagination Section -->
+        <div class="p-5 flex justify-center">
+            {% if expenses.has_previous %}
+            <a href="?page={{ expenses.previous_page_number }}" class="px-3 py-2 bg-gray-300 rounded-l hover:bg-gray-400">Previous</a>
+            {% endif %}
+
+            {% for page_num in expenses.paginator.page_range %}
+            <a href="?page={{ page_num }}" 
+            class="px-3 py-2 {% if expenses.number == page_num %}bg-yellow-600 text-white{% else %}bg-gray-300{% endif %} hover:bg-yellow-500">
+            {{ page_num }}
+            </a>
+            {% endfor %}
+
+            {% if expenses.has_next %}
+            <a href="?page={{ expenses.next_page_number }}" class="px-3 py-2 bg-gray-300 rounded-r hover:bg-gray-400">Next</a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}
     
