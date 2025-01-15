@@ -197,6 +197,7 @@ def add_itinerary(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id, user=request.user)  # Ensure the trip belongs to the user
     user_profile = get_object_or_404(User_Profile, user=request.user)  # Retrieve the user profile
     preferred_currency = user_profile.preferred_currency  # For the preferred currency
+    category_budgets = CategoryBudget.objects.filter(trip=trip)
 
     if request.method == 'POST':
         form = ItineraryForm(request.POST, trip=trip)
@@ -219,10 +220,20 @@ def add_itinerary(request, trip_id):
     else:
         form = ItineraryForm(trip=trip)
 
+    category_budgets_with_remaining = [
+    {
+        'category': category.category,
+        'category_budget': category.budget,  # Pass only the category name (string)
+        'remaining_budget': category.remaining_iti_budget(),
+    }
+    for category in category_budgets
+]
+
     return render(request, 'travel/add_itinerary.html', {
         'form': form,
         'trip': trip,
         'preferred_currency': preferred_currency,
+        'category_budgets': category_budgets_with_remaining,
     })
 
 from django.http import HttpResponseServerError

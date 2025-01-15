@@ -6,6 +6,7 @@ from userProfile.models import User_Profile
 from django.contrib.auth.decorators import login_required
 import openpyxl
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 CURRENCY_SYMBOLS = {
     'USD': '$',  # US Dollar
@@ -62,16 +63,24 @@ def expense_list(request, trip_id):
     if category_filter:
         expenses = expenses.filter(category__category=category_filter)
 
+    # Paginate the expenses
+    paginator = Paginator(expenses, 5)  # 5 expenses per page
+    page_number = request.GET.get('page')
+    expenses_page = paginator.get_page(page_number)    
+
     # Get all categories for the dropdown
     categories = CategoryBudget.objects.filter(trip=trip).values_list('category', flat=True)
+    # Get all category to display not the strings 
+    category = CategoryBudget.objects.filter(trip=trip)
 
     return render(request, 'expenses/expense_list.html', {
         'trip': trip,
         'expenses': expenses,
+        'expenses': expenses_page,  # Use the paginated object
         'categories': categories,  # Pass categories for the dropdown
+        'category': category,  # Pass categories for the dropdown
         'selected_category': category_filter,  # Pass the selected category to retain the filter
     })
-
 
 def add_expense(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id)

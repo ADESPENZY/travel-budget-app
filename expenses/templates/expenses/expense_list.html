@@ -1,109 +1,212 @@
 {% extends 'base.html' %}
 
-
 {% block main %}
-<div class="bg-yellow-gray min-h-screen py-10">
-    <div class="md:w-[80%] w-full mx-auto bg-white rounded-lg shadow-lg">
-        <!-- Header Section -->
-        <div class="p-5 bg-gray-200 flex justify-between items-center rounded-t-lg">
-            <h2 class="text-2xl font-bold text-gray-700">Expenses List</h2>
-            <div class="space-x-4">
-                <a href="{% url 'download-expenses-pdf' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
-                <a href="{% url 'download-expenses' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
-            </div>
-        </div>
+<div class="bg-yellow-gray md:max-h-screen py-20">
+    <div class="w-[90%] mx-auto flex md:flex-row gap-5 md:gap-0 flex-col">
+        <!-- Right Column -->
+        <div class="md:w-[70%] w-full bg-white rounded-l-lg shadow-lg">
+            <!-- Nav section  -->
+            <div class="flex justify-between items-center p-7">
+                <!-- Logo Section -->
+                <div>
+                    <a href="/" class="text-4xl font-bold flex items-center gap-2 text-gray-700 hover:text-gray-900 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                        </svg>
+                        <h3 class="text-3xl font-extrabold">
+                            <span class="text-yellow-600">Travel</span>Budget
+                        </h3>
+                    </a>
+                </div>
 
-        <!-- Expenses List Section -->
-        <div class="p-5">
-            <div class="flex justify-between mb-4">
-                <!-- Filter Dropdown -->
-                <form method="GET">
-                    <select name="category" class="border-gray-300 rounded px-5 py-2" onchange="this.form.submit()">
-                        <option value="">All Categories</option>
-                        {% for category in categories %}
-                            <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
-                                {{ category }}
-                            </option>
+                <!-- Hamburger Menu for Mobile -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 hover:text-gray-900 transition duration-300 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Navigation Section -->
+                <div id="nav-links" class="hidden md:flex space-x-8 text-lg font-medium text-gray-600">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3M17 16l4-4m0 0l-4-4m4 4H9" />
+                        </svg>    
+                        <a href="{% url 'dashboard' %}" class="hover:text-yellow-600 transition duration-300">Dashboard</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+                        </svg>
+                        <a href="{% url 'trip_detail' trip.id %}" class="hover:text-yellow-600 transition duration-300">Trip Detail</a>
+                    </li>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+                <div id="mobile-nav" class="hidden flex-col space-y-4 text-lg font-medium text-gray-600 bg-white p-4 md:hidden">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M9 21V3M17 16l4-4m0 0l-4-4m4 4H9" />
+                        </svg>    
+                        <a href="{% url 'dashboard' %}" class="hover:text-yellow-600 transition duration-300">Dashboard</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+                        </svg>
+                        <a href="{% url 'trip_detail' trip.id %}" class="hover:text-yellow-600 transition duration-300">Trip Detail</a>
+                    </li>
+                </div>
+            <!-- Mobile Navigation Ends -->
+
+            <!-- Header Section -->
+            <div class="p-5 bg-gray-200 flex flex-col md:flex-row space-y-6 md:space-x-0 justify-between items-center rounded-t-lg">
+                <h2 class="text-2xl font-bold text-gray-700">Expenses List</h2>
+                
+                <div class="space-x-4 ">
+                    <a href="{% url 'download-expenses-pdf' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
+                    <a href="{% url 'download-expenses' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
+                </div>
+
+            </div>
+
+            
+    
+            <!-- Expenses List Section -->
+            <div class="p-5">
+                <div class="flex justify-between mb-4">
+                    <!-- Filter Dropdown -->
+                    <form method="GET">
+                        <select name="category" class="border-gray-300 rounded px-5 py-2" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
+                                    {{ category }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                
+                    <form method="get" id="sortForm">
+                        {% for key, value in request.GET.items %}
+                            {% if key != 'sort' %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
                         {% endfor %}
-                    </select>
-                </form>
-            
-                <form method="get" id="sortForm">
-                    {% for key, value in request.GET.items %}
-                        {% if key != 'sort' %}
-                            <input type="hidden" name="{{ key }}" value="{{ value }}">
-                        {% endif %}
-                    {% endfor %}
-                    <select
-                        name="sort"
-                        class="border-gray-300 rounded px-3 py-2"
-                        onchange="document.getElementById('sortForm').submit();">
-                        <option value="">Sort by</option>
-                        <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Date</option>
-                        <option value="amount" {% if request.GET.sort == "amount" %}selected{% endif %}>Amount</option>
-                    </select>
-                </form>
+                        <select
+                            name="sort"
+                            class="border-gray-300 rounded px-3 py-2"
+                            onchange="document.getElementById('sortForm').submit();">
+                            <option value="">Sort by</option>
+                            <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Date</option>
+                            <option value="amount" {% if request.GET.sort == "amount" %}selected{% endif %}>Amount</option>
+                        </select>
+                    </form>
+                </div>
+    
+                <!-- Expenses Table -->
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2">Date</th>
+                            <th class="border border-gray-300 px-4 py-2">Category</th>
+                            <th class="border hidden md:flex border-gray-300 px-4 py-2">Description</th>
+                            <th class="border border-gray-300 px-4 py-2">Amount</th>
+                            <th class="border hidden md:flex border-gray-300 px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-gray-300 px-4 text-sm py-2">{{ expense.date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ expense.category.category }}</td>
+                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ expense.description }}</td>
+                            <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">
+                                ${{ expense.amount }}
+                            </td>
+                            <td class="border hidden md:flex space-x-3 border-gray-300 px-4 py-2 text-center">
+                                <!-- Edit Icon -->
+                                <a href="{% url 'edit-expense' trip.id expense.id %}" class="text-blue-500 hover:text-blue-700">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+    
+                                <!-- Delete Icon -->
+                                <a href="{% url 'delete-expense' trip.id expense.id %}" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
             </div>
+    
+            <!-- Pagination Section -->
+            <div class="p-5 flex flex-wrap justify-center items-center space-x-1 text-sm">
+                {% if expenses.has_previous %}
+                <a href="?page={{ expenses.previous_page_number }}" 
+                class="px-4 py-2 bg-gray-200 border border-gray-300 rounded-l hover:bg-yellow-600 hover:text-white transition">
+                    Previous
+                </a>
+                {% endif %}
 
-            <!-- Expenses Table -->
-            <table class="w-full border-collapse border border-gray-300">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="border border-gray-300 px-4 py-2">Date</th>
-                        <th class="border border-gray-300 px-4 py-2">Category</th>
-                        <th class="border border-gray-300 px-4 py-2">Description</th>
-                        <th class="border border-gray-300 px-4 py-2">Amount</th>
-                        <th class="border border-gray-300 px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for expense in expenses %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-4 py-2">{{ expense.date }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ expense.category.category }}</td>
-                        <td class="border border-gray-300 px-4 py-2">{{ expense.description }}</td>
-                        <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">
-                            ${{ expense.amount }}
-                        </td>
-                        <td class="border border-gray-300 px-4 py-2 text-center">
-                            <!-- Edit Icon -->
-                            <a href="{% url 'edit-expense' trip.id expense.id %}" class="text-blue-500 hover:text-blue-700">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                {% for page_num in expenses.paginator.page_range %}
+                <a href="?page={{ page_num }}" 
+                class="px-4 py-2 border border-gray-300 {% if expenses.number == page_num %}bg-yellow-600 text-white{% else %}bg-gray-200{% endif %} hover:bg-yellow-500 transition">
+                    {{ page_num }}
+                </a>
+                {% endfor %}
 
-                            <!-- Delete Icon -->
-                            <a href="{% url 'delete-expense' trip.id expense.id %}" class="text-red-500 hover:text-red-700">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+                {% if expenses.has_next %}
+                <a href="?page={{ expenses.next_page_number }}" 
+                class="px-4 py-2 bg-gray-200 border border-gray-300 rounded-r hover:bg-yellow-600 hover:text-white transition">
+                    Next
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- left column -->
+        <div class="md:w-[30%] h-[620px] w-full bg-white rounded-r-lg p-5 overflow-y-auto">
+            <h3 class="text-2xl text-center font-bold text-yellow-600 mb-5"> Categories </h3>
+            <div>
+                <ul class="space-y-4">
+                    {% for cat in category %}
+                        <li class="bg-gray-100 border-l-4 border-yellow-600 p-4 rounded-lg shadow-sm hover:shadow-md hover:bg-yellow-600 transition duration-300 ease-in-out">
+                            <!-- Category Name -->
+                            <h6 class="font-semibold text-gray-700 text-lg mb-2">{{ cat.category }}</h6>
                             
-                        </td>
-                    </tr>
+                            <!-- Budget -->
+                            <p class="text-gray-600 text-sm">
+                                Budget: <span class="font-medium text-gray-800">{{ cat.budget }}</span>
+                            </p>
+                            
+                            <!-- Remaining Budget -->
+                            <p class="text-gray-600 text-sm">
+                                Remaining Budget: 
+                                <span class="font-medium {% if category.remaining_budget < 0 %}text-red-600{% else %}text-green-600{% endif %}">
+                                    {{ cat.remaining_budget }}
+                                </span>
+                            </p>
+                        </li>
                     {% endfor %}
-                </tbody>
-            </table>
-            
+                </ul>
+            </div> 
         </div>
-
-        <!-- Pagination Section -->
-        <div class="p-5 flex justify-center">
-            {% if expenses.has_previous %}
-            <a href="?page={{ expenses.previous_page_number }}" class="px-3 py-2 bg-gray-300 rounded-l hover:bg-gray-400">Previous</a>
-            {% endif %}
-
-            {% for page_num in expenses.paginator.page_range %}
-            <a href="?page={{ page_num }}" 
-            class="px-3 py-2 {% if expenses.number == page_num %}bg-yellow-600 text-white{% else %}bg-gray-300{% endif %} hover:bg-yellow-500">
-            {{ page_num }}
-            </a>
-            {% endfor %}
-
-            {% if expenses.has_next %}
-            <a href="?page={{ expenses.next_page_number }}" class="px-3 py-2 bg-gray-300 rounded-r hover:bg-gray-400">Next</a>
-            {% endif %}
-        </div>
-
     </div>
 </div>
+
+<script>
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+});
+</script>
 
 {% endblock %}
     
