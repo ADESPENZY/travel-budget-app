@@ -4,6 +4,8 @@ from .forms import ExpenseForm
 from travel.models import Trip, CategoryBudget
 from userProfile.models import User_Profile
 from django.contrib.auth.decorators import login_required
+import openpyxl
+from django.http import HttpResponse
 
 CURRENCY_SYMBOLS = {
     'USD': '$',  # US Dollar
@@ -168,3 +170,119 @@ def delete_expense(request, trip_id, expense_id):
 
     return render(request, 'expenses/delete_expense.html', {'expense': expense})
 
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from travel.models import Trip
+from userProfile.models import User_Profile
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+import openpyxl
+
+@login_required
+def download_expenses_excel(request, trip_id):
+    # Get the trip and related expenses
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    expenses = trip.expenses.all()
+
+    # Fetch the user's preferred currency
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency = 'N/A'
+        currency_symbol = 'N/A'
+
+    # Create an Excel workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Expenses for {trip.trip_name}"
+
+    # Define headers for the Excel sheet
+    headers = ['Date', 'Category', 'Description', 'Amount', 'Preferred Currency']
+    ws.append(headers)
+
+    # Populate the rows with expense data
+    total_expenses = 0
+    for expense in expenses:
+        total_expenses += expense.amount
+        ws.append([
+            expense.date.strftime('%Y-%m-%d'),  # Date
+            expense.category.category,  # Category
+            expense.description,  # Description
+            expense.amount,  # Amount
+            f"{currency_symbol} ({preferred_currency})"  # Preferred Currency
+        ])
+
+    # Add totals row
+    ws.append([])
+    ws.append(['', '', 'Total', total_expenses, f"{currency_symbol} ({preferred_currency})"])
+
+    # Prepare the response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=expenses_{trip.trip_name}.xlsx'
+    wb.save(response)
+    return response
+
+
+@login_required
+def download_expenses_pdf(request, trip_id):
+    # Get the trip and related expenses
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    expenses = trip.expenses.all()
+
+    # Fetch the user's preferred currency
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+    except User_Profile.DoesNotExist:
+        preferred_currency = 'N/A'
+
+    # Create the HttpResponse object
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=expenses_{trip.trip_name}.pdf'
+
+    # Create the PDF document
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Title
+    styles = getSampleStyleSheet()
+    title = Paragraph(f"Expenses for {trip.trip_name}", styles['Title'])
+    elements.append(title)
+
+    # Table data
+    data = [['Date', 'Category', 'Description', 'Amount', 'Preferred Currency']]
+    total_expenses = 0
+    for expense in expenses:
+        total_expenses += expense.amount
+        data.append([
+            expense.date.strftime('%Y-%m-%d'),  # Date
+            expense.category.category,  # Category
+            expense.description,  # Description
+            expense.amount,  # Amount
+            preferred_currency  # Preferred Currency
+        ])
+
+    # Add totals row
+    data.append(['', '', 'Total', total_expenses, preferred_currency])
+
+    # Create the table
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align all cells
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Header font
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Header padding
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # Rows background
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Table grid
+    ]))
+    elements.append(table)
+
+    # Build the PDF
+    doc.build(elements)
+    return response

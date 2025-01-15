@@ -8,8 +8,8 @@
         <div class="p-5 bg-gray-200 flex justify-between items-center rounded-t-lg">
             <h2 class="text-2xl font-bold text-gray-700">Expenses List</h2>
             <div class="space-x-4">
-                <a href="#" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
-                <a href="#" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
+                <a href="{% url 'download-expenses-pdf' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
+                <a href="{% url 'download-expenses' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
             </div>
         </div>
 
