@@ -3,6 +3,7 @@ from .models import Expense
 from .forms import ExpenseForm
 from travel.models import Trip, CategoryBudget
 from userProfile.models import User_Profile
+from django.contrib.auth.decorators import login_required
 
 CURRENCY_SYMBOLS = {
     'USD': '$',  # US Dollar
@@ -109,3 +110,61 @@ def add_expense(request, trip_id):
         'preferred_currency_symbol': preferred_currency_symbol,
         'preferred_currency':preferred_currency,
     })
+
+@login_required
+def edit_expense(request, trip_id, expense_id):
+    # Fetch the expense, ensuring it belongs to the given trip_id
+    expense = get_object_or_404(Expense, id=expense_id, trip_id=trip_id)
+
+    category_budgets = CategoryBudget.objects.filter(trip_id=trip_id).select_related('trip')
+
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency = None
+        preferred_currency_symbol = None
+
+    # Ensure only the owner can edit the expense
+    if request.user != expense.user:
+        return redirect('trip_detail', trip_id=trip_id)
+
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST, request.FILES, instance=expense, trip=expense.trip)
+        if form.is_valid():
+            form.save()
+            return redirect('expense-list', trip_id=trip_id)
+    else:
+        form = ExpenseForm(instance=expense, trip=expense.trip)
+
+    category_budgets_with_remaining = [
+        {
+            'category': category.category,
+            'category_budget': category.budget,
+            'remaining_budget': category.remaining_budget(),
+        }
+        for category in category_budgets
+    ]
+
+    return render(request, 'expenses/edit_expense.html', {
+        'form': form,
+        'trip': expense.trip,
+        'expense': expense,
+        'category_budgets': category_budgets_with_remaining,
+        'preferred_currency_symbol': preferred_currency_symbol,
+        'preferred_currency': preferred_currency,
+    })
+
+
+@login_required
+def delete_expense(request, trip_id, expense_id):
+    # Fetch the expense ensuring it belongs to the user and the given trip_id
+    expense = get_object_or_404(Expense, id=expense_id, trip_id=trip_id, user=request.user)
+    
+    if request.method == 'POST':
+        expense.delete()
+        return redirect('expense-list', trip_id=trip_id)
+
+    return render(request, 'expenses/delete_expense.html', {'expense': expense})
+
