@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import Account
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Trip(models.Model):
@@ -41,9 +42,11 @@ class CategoryBudget(models.Model):
     def remaining_budget(self):
         """Return the remaining budget for the category."""
         return self.budget - self.total_expenses()
-
+    
     def __str__(self):
-        return f"{self.category} - {self.budget} ({self.trip.trip_name})"
+        if self.trip:
+            return f"{self.category} - {self.budget} ({self.trip.trip_name})"
+        return f"{self.category} - {self.budget}"
 
 class Itinerary(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='items')

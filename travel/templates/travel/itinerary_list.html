@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="bg-yellow-gray md:max-h-screen py-20">
+    <div class="w-[90%] mx-auto flex md:flex-row gap-5 md:gap-0 flex-col">
+        <!-- Right Column -->
+        <div class="md:w-[70%] w-full bg-white rounded-l-lg shadow-lg">
+            <!-- Nav section  -->
+            <div class="flex justify-between items-center p-7">
+                <!-- Logo Section -->
+                <div>
+                    <a href="/" class="text-4xl font-bold flex items-center gap-2 text-gray-700 hover:text-gray-900 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.88 3.549a9 9 0 11-9.831 14.835m7.398-4.148A9.05 9.05 0 0112 21v.01M21 12.74a9.05 9.05 0 01-9-9" />
+                        </svg>
+                        <h3 class="text-3xl font-extrabold">
+                            <span class="text-yellow-600">Travel</span>Plan
+                        </h3>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Header Section -->
+            <div class="p-5 bg-gray-200 flex flex-col md:flex-row space-y-6 md:space-x-0 justify-between items-center rounded-t-lg">
+                <h2 class="text-2xl font-bold text-gray-700">Itineraries List</h2>
+
+                <div class="space-x-4">
+                    <a href="" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
+                    <a href="" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
+                </div>
+            </div>
+
+            <!-- Itineraries List Section -->
+            <div class="p-5">
+                <div class="flex justify-between mb-4">
+                    <!-- Filter Dropdown -->
+                    <form method="GET">
+                        <select name="category" class="border-gray-300 rounded px-5 py-2" onchange="this.form.submit()">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
+                                    {{ category }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                
+                    <form method="get" id="sortForm">
+                        {% for key, value in request.GET.items %}
+                            {% if key != 'sort' %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+                        <select
+                            name="sort"
+                            class="border-gray-300 rounded px-3 py-2"
+                            onchange="document.getElementById('sortForm').submit();">
+                            <option value="">Sort by</option>
+                            <option value="date" {% if request.GET.sort == "date" %}selected{% endif %}>Date</option>
+                            <option value="duration" {% if request.GET.sort == "duration" %}selected{% endif %}>Duration</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Itineraries Table -->
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2">Date</th>
+                            <th class="border border-gray-300 px-4 py-2">Category</th>
+                            <th class="border hidden md:flex border-gray-300 px-4 py-2">Details</th>
+                            <th class="border border-gray-300 px-4 py-2">Duration</th>
+                            <th class="border hidden md:flex border-gray-300 px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for itinerary in itineraries %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-gray-300 px-4 text-sm py-2">{{ itinerary.date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ itinerary.category.category }}</td>
+                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ itinerary.details }}</td>
+                            <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">
+                                {{ itinerary.duration }} hours
+                            </td>
+                            <td class="border hidden md:flex space-x-3 border-gray-300 px-4 py-2 text-center">
+                                <!-- Edit Icon -->
+                                <a href="" class="text-blue-500 hover:text-blue-700">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <!-- Delete Icon -->
+                                <a href="" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

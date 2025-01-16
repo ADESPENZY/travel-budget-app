@@ -10,5 +10,6 @@ urlpatterns = [
     path('trip/<int:trip_id>/category_budget/<int:category_budget_id>/edit/', views.edit_category_budget, name='edit_category_budget'),
     path('trip/<int:trip_id>/category_budget/<int:category_budget_id>/delete/', views.delete_category_budget, name='delete_category_budget'),
     path('<int:trip_id>/items/add/', views.add_itinerary, name='add_itinerary'),
+    path('<int:trip_id>/items/list/', views.list_itinerary, name='list_itinerary'),
     path('travel/<int:trip_id>/details/', views.trip_detail, name='trip_detail'),
 ]

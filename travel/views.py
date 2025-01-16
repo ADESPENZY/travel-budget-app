@@ -5,6 +5,8 @@ from .models import Trip, Itinerary, CategoryBudget
 from userProfile.models import User_Profile
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 def add_trip(request):
@@ -104,7 +106,6 @@ def edit_trip(request, trip_id):
         'preferred_currency': preferred_currency
     })
 
-
 # View to delete a trip
 def delete_trip(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id)
@@ -113,10 +114,10 @@ def delete_trip(request, trip_id):
         return redirect('trip_list')
     return render(request, 'travel/trip_delete.html', {'trip': trip})
 
-
 @login_required
 def create_category_budget(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    
     # Retrieve the user's preferred currency
     try:
         user_profile = User_Profile.objects.get(user=request.user)
@@ -130,10 +131,26 @@ def create_category_budget(request, trip_id):
         form = CategoryBudgetForm(request.POST)
         if form.is_valid():
             category_budget = form.save(commit=False)
-            category_budget.trip = trip  # Associate the budget with the selected trip
-            category_budget.save()
-            messages.success(request, f"Category budget for {category_budget.category} added successfully!")
-            return redirect('trip_detail', trip_id=trip.id)
+            category_budget.trip = trip  # Associate the budget with the trip
+
+            # Set the trip before calling `clean()`
+            try:
+                category_budget.clean()  # Call clean explicitly to validate
+                existing_budgets_total = trip.category_budgets.aggregate(total=Sum('budget'))['total'] or 0
+                total_after_adding = existing_budgets_total + category_budget.budget
+
+                if total_after_adding > trip.budget:
+                    messages.error(
+                        request,
+                        f"Adding this category budget exceeds the trip's overall budget of {trip.budget} {preferred_currency_symbol}. "
+                        f"Please adjust the budget."
+                    )
+                else:
+                    category_budget.save()
+                    messages.success(request, f"Category budget for {category_budget.category} added successfully!")
+                    return redirect('trip_detail', trip_id=trip.id)
+            except ValidationError as e:
+                messages.error(request, f"Validation error: {e}")
         else:
             messages.error(request, "Failed to add category budget. Please check the form.")
     else:
@@ -148,24 +165,47 @@ def create_category_budget(request, trip_id):
 
 @login_required
 def edit_category_budget(request, trip_id, category_budget_id):
+    # Get the trip and category budget
     trip = get_object_or_404(Trip, id=trip_id, user=request.user)
     category_budget = get_object_or_404(CategoryBudget, id=category_budget_id, trip=trip)
+
+    # Retrieve the user's preferred currency and symbol
     try:
         user_profile = User_Profile.objects.get(user=request.user)
         preferred_currency = user_profile.preferred_currency
         preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
     except User_Profile.DoesNotExist:
         preferred_currency = None
-        preferred_currency_symbol = None  # Fallback if no profile exists
+        preferred_currency_symbol = None
 
     if request.method == 'POST':
         form = CategoryBudgetForm(request.POST, instance=category_budget)
         if form.is_valid():
-            form.save()
-            messages.success(request, f"Category budget for {category_budget.category} updated successfully!")
-            return redirect('trip_detail', trip_id=trip.id)
+            category_budget = form.save(commit=False)
+            category_budget.trip = trip  # Associate the budget with the trip
+
+            # Validate total budget
+            category_budget.clean()  # Call clean explicitly to validate
+            existing_budgets_total = (
+                trip.category_budgets.exclude(id=category_budget.id)
+                .aggregate(total=Sum('budget'))['total']
+                or 0
+            )
+            total_after_edit = existing_budgets_total + category_budget.budget
+
+            if total_after_edit > trip.budget:
+                messages.error(
+                    request,
+                    f"Updating this category budget exceeds the trip's overall budget of "
+                    f"{trip.budget} {preferred_currency_symbol}. Please adjust the budget."
+                )
+            else:
+                category_budget.save()
+                messages.success(request, f"Category budget for '{category_budget.category}' updated successfully!")
+                return redirect('trip_detail', trip_id=trip.id)
         else:
             messages.error(request, "Failed to update category budget. Please check the form.")
+
     else:
         form = CategoryBudgetForm(instance=category_budget)
 
@@ -235,6 +275,45 @@ def add_itinerary(request, trip_id):
         'preferred_currency': preferred_currency,
         'category_budgets': category_budgets_with_remaining,
     })
+
+
+def list_itinerary(request, trip_id):
+    # Get the trip object or return a 404 if not found
+    trip = get_object_or_404(Trip, id=trip_id)
+
+    # Retrieve all itineraries associated with the trip
+    items = trip.items.all()  # `related_name='items'` in the Itinerary model
+
+    # Sorting
+    sort_by = request.GET.get('sort', '')
+    if sort_by == 'start_time':
+        items = items.order_by('start_time')  # Sort by start time
+    elif sort_by == 'budget':
+        items = items.order_by('budget')  # Sort by budget
+
+    # Filtering by category
+    category_filter = request.GET.get('category')
+    if category_filter:
+        items = items.filter(category_budget__category=category_filter)
+
+    # Pagination
+    paginator = Paginator(items, 5)  # Show 5 itineraries per page
+    page_number = request.GET.get('page')
+    items_page = paginator.get_page(page_number)
+
+    # Get all categories for the dropdown
+    categories = CategoryBudget.objects.filter(trip=trip).values_list('category', flat=True)
+    category_objects = CategoryBudget.objects.filter(trip=trip)
+
+    return render(request, 'travel/itinerary_list.html', {
+        'trip': trip,
+        'itineraries': items,  # Pass unpaginated list if needed elsewhere
+        'itineraries_page': items_page,  # Pass the paginated object
+        'categories': categories,  # Pass category names for the dropdown
+        'category_objects': category_objects,  # Pass full category objects
+        'selected_category': category_filter,  # Pass selected category for retaining filter
+    })
+
 
 from django.http import HttpResponseServerError
 
