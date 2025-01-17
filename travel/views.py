@@ -8,6 +8,16 @@ from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from travel.models import Trip
+from userProfile.models import User_Profile
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+import openpyxl
 
 # Create your views here.
 def add_trip(request):
@@ -415,6 +425,98 @@ def trip_detail(request, trip_id):
     except Exception as e:
         print(f"Error: {e}")  # Log the error for debugging
         return HttpResponseServerError("An unexpected error occurred.")
+    
+@login_required
+def download_itinerary_pdf(request, trip_id):
+    # Get the trip and related itineraries
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    itineraries = trip.items.all()
+
+    # Create the HttpResponse object
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=itinerary_{trip.trip_name}.pdf'
+
+    # Create the PDF document
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Title
+    styles = getSampleStyleSheet()
+    title = Paragraph(f"Itinerary for {trip.trip_name}", styles['Title'])
+    elements.append(title)
+
+    # Table data
+    data = [['Title', 'Category', 'Details', 'Start Time', 'End Time', 'Budget']]
+    total_budget = 0
+    for itinerary in itineraries:
+        total_budget += itinerary.budget
+        data.append([
+            itinerary.title,
+            itinerary.category_budget.category,  # Category name
+            itinerary.details or 'N/A',  # Details
+            itinerary.start_time.strftime('%Y-%m-%d %H:%M:%S'),  # Start time
+            itinerary.end_time.strftime('%Y-%m-%d %H:%M:%S') if itinerary.end_time else 'N/A',  # End time
+            itinerary.budget,  # Budget
+        ])
+
+    # Add totals row
+    data.append(['', '', '', '', 'Total Budget', total_budget])
+
+    # Create the table
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Header text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align all cells
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Header font
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Header padding
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # Rows background
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Table grid
+    ]))
+    elements.append(table)
+
+    # Build the PDF
+    doc.build(elements)
+    return response
+
+@login_required
+def download_itinerary_excel(request, trip_id):
+    # Get the trip and related itineraries
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    itineraries = trip.items.all()  # Access related itineraries
+
+    # Create an Excel workbook and worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Itinerary for {trip.trip_name}"
+
+    # Define headers for the Excel sheet
+    headers = ['Title', 'Category', 'Details', 'Start Time', 'End Time', 'Budget']
+    ws.append(headers)
+
+    # Populate the rows with itinerary data
+    total_budget = 0
+    for itinerary in itineraries:
+        total_budget += itinerary.budget
+        ws.append([
+            itinerary.title,
+            itinerary.category_budget.category,  # Category name
+            itinerary.details or 'N/A',  # Details
+            itinerary.start_time.strftime('%Y-%m-%d %H:%M:%S'),  # Start time
+            itinerary.end_time.strftime('%Y-%m-%d %H:%M:%S') if itinerary.end_time else 'N/A',  # End time
+            itinerary.budget,  # Budget
+        ])
+
+    # Add totals row
+    ws.append([])
+    ws.append(['', '', '', '', 'Total Budget', total_budget])
+
+    # Prepare the response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=itinerary_{trip.trip_name}.xlsx'
+    wb.save(response)
+    return response
+
 
 
 
