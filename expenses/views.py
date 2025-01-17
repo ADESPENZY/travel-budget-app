@@ -167,7 +167,6 @@ def edit_expense(request, trip_id, expense_id):
         'preferred_currency': preferred_currency,
     })
 
-
 @login_required
 def delete_expense(request, trip_id, expense_id):
     # Fetch the expense ensuring it belongs to the user and the given trip_id

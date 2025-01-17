@@ -4,6 +4,20 @@
 <div class="bg-white-gray min-h-screen md:py-10">
     <!-- Main Content Container -->
     <div class="bg-white md:w-[80%] mx-auto p-0 md:p-10 shadow-lg rounded-lg">
+        <!-- Display Messages -->
+        {% if messages %}
+            <div class="space-y-2">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg text-sm 
+                        {% if message.tags == 'success' %}bg-green-100 text-green-800 border-green-400{% endif %}
+                        {% if message.tags == 'error' %}bg-red-100 text-red-800 border-red-400{% endif %}
+                        {% if message.tags == 'warning' %}bg-yellow-100 text-yellow-800 border-yellow-400{% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="flex justify-between items-center p-5">
             <!-- Logo Section -->
             <div>
@@ -114,6 +128,16 @@
                     <h5 class="font-semibold">Trip Budget:</h5>
                     <p>{{ trip.budget }}</p>
                 </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center md:justify-between mt-6 gap-5">
+                    <a href="{% url 'edit_trip' trip.id %}" class="inline-block text-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-yellow-600">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'delete_trip' trip.id %}" class="inline-block text-center px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-yellow-600">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </div>
             </div>
         
             <div class="bg-gray-50 p-6 rounded-lg shadow-md flex-1">
@@ -130,7 +154,13 @@
             </div>
         
             <div class="bg-gray-50 p-6 rounded-lg shadow-md flex-1 ">
-                <h4 class="text-xl font-bold mb-4 text-gray-700">Categories For Trip</h4>
+                <h4 class="text-xl text-center font-bold text-gray-700">Categories For Trip</h4>
+                <div class="text-center my-4">
+                    <!-- Add Category Budget Button -->
+                    <a href="{% url 'category_budget' trip.id %}" class="px-4 py-2  bg-gray-100 text-black rounded hover:bg-yellow-500">
+                        Add Category Budget
+                    </a>
+                </div>
                 <ul class="space-y-4">
                     {% for category_budget in trip.category_budgets.all %}
                         <li class="flex justify-between items-center bg-white p-4 rounded-md shadow-sm border border-gray-200">

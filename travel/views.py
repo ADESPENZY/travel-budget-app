@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
+from django.http import HttpResponseServerError
 
 # Create your views here.
 def add_trip(request):
@@ -234,40 +235,39 @@ def delete_category_budget(request, trip_id, category_budget_id):
 
 @login_required
 def add_itinerary(request, trip_id):
-    trip = get_object_or_404(Trip, id=trip_id, user=request.user)  # Ensure the trip belongs to the user
-    user_profile = get_object_or_404(User_Profile, user=request.user)  # Retrieve the user profile
-    preferred_currency = user_profile.preferred_currency  # For the preferred currency
+    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
+    user_profile = get_object_or_404(User_Profile, user=request.user)
+    preferred_currency = user_profile.preferred_currency
     category_budgets = CategoryBudget.objects.filter(trip=trip)
 
     if request.method == 'POST':
         form = ItineraryForm(request.POST, trip=trip)
         if form.is_valid():
-            start_time = form.cleaned_data['start_time']
-            end_time = form.cleaned_data['end_time']
+            start_time = form.cleaned_data.get('start_time')
+            end_time = form.cleaned_data.get('end_time')
             category_budget = form.cleaned_data['category_budget']
             budget = form.cleaned_data['budget']
 
-            # Check for valid times
-            if end_time and start_time >= end_time:
+            if end_time and start_time and start_time >= end_time:
                 form.add_error('end_time', 'End time must be after the start time.')
             elif budget > category_budget.budget:
                 form.add_error('budget', 'Itinerary budget exceeds the category budget.')
             else:
                 itinerary_item = form.save(commit=False)
-                itinerary_item.trip = trip  # Link the itinerary to the trip
+                itinerary_item.trip = trip
                 itinerary_item.save()
                 return redirect('trip_detail', trip_id=trip.id)
     else:
         form = ItineraryForm(trip=trip)
 
     category_budgets_with_remaining = [
-    {
-        'category': category.category,
-        'category_budget': category.budget,  # Pass only the category name (string)
-        'remaining_budget': category.remaining_iti_budget(),
-    }
-    for category in category_budgets
-]
+        {
+            'category': category.category,
+            'category_budget': category.budget,
+            'remaining_budget': category.remaining_iti_budget(),
+        }
+        for category in category_budgets
+    ]
 
     return render(request, 'travel/add_itinerary.html', {
         'form': form,
@@ -276,6 +276,58 @@ def add_itinerary(request, trip_id):
         'category_budgets': category_budgets_with_remaining,
     })
 
+@login_required
+def edit_itinerary(request, trip_id, itinerary_id):
+    itinerary = get_object_or_404(Itinerary, id=itinerary_id, trip_id=trip_id)
+    category_budgets = CategoryBudget.objects.filter(trip_id=trip_id).select_related('trip')
+
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency = None
+        preferred_currency_symbol = None
+
+    if request.user != itinerary.trip.user:
+        return redirect('trip_detail', trip_id=trip_id)
+
+    if request.method == 'POST':
+        form = ItineraryForm(request.POST, request.FILES, instance=itinerary, trip=itinerary.trip)
+        if form.is_valid():
+            form.save()
+            return redirect('list_itinerary', trip_id=trip_id)
+    else:
+        form = ItineraryForm(instance=itinerary, trip=itinerary.trip)
+
+    category_budgets_with_remaining = [
+        {
+            'category': category.category,
+            'category_budget': category.budget,
+            'remaining_budget': category.remaining_iti_budget(),
+        }
+        for category in category_budgets
+    ]
+
+    return render(request, 'travel/edit_itinerary.html', {
+        'form': form,
+        'trip': itinerary.trip,
+        'itinerary': itinerary,
+        'category_budgets': category_budgets_with_remaining,
+        'preferred_currency_symbol': preferred_currency_symbol,
+        'preferred_currency': preferred_currency,
+    })
+
+@login_required
+def delete_itinerary(request, trip_id, itinerary_id):
+    # Fetch the itinerary ensuring it belongs to the user and the given trip_id
+    itinerary = get_object_or_404(Itinerary, id=itinerary_id, trip_id=trip_id, user=request.user)
+    
+    if request.method == 'POST':
+        itinerary.delete()
+        return redirect('itinerary-list', trip_id=trip_id)
+
+    return render(request, 'travel/delete_itinerary.html', {'itinerary': itinerary})
 
 def list_itinerary(request, trip_id):
     # Get the trip object or return a 404 if not found
@@ -313,9 +365,6 @@ def list_itinerary(request, trip_id):
         'category_objects': category_objects,  # Pass full category objects
         'selected_category': category_filter,  # Pass selected category for retaining filter
     })
-
-
-from django.http import HttpResponseServerError
 
 @login_required
 def trip_detail(request, trip_id):
