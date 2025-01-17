@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="container mx-auto p-6 max-w-4xl bg-white shadow-lg rounded-lg mt-8">
+    <!-- Header -->
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Itinerary Details</h1>
+        <p class="text-gray-500 mt-2">Discover all the details about your itinerary</p>
+    </div>
+
+    <!-- Itinerary Details -->
+    <div class="space-y-4">
+        <!-- Category -->
+        <div class="flex items-center">
+            <span class="font-semibold text-gray-700 w-40">Category:</span>
+            <p class="text-gray-800">{{ itinerary.category_budget.category }}</p>
+        </div>
+
+        <!-- Budget -->
+        <div class="flex items-center">
+            <span class="font-semibold text-gray-700 w-40">Budget:</span>
+            <p class="text-gray-800">{{ preferred_currency_symbol }}{{ itinerary.budget }}</p>
+        </div>
+
+        <!-- Start Time -->
+        <div class="flex items-center">
+            <span class="font-semibold text-gray-700 w-40">Start Time:</span>
+            <p class="text-gray-800">{{ itinerary.start_time }}</p>
+        </div>
+
+        <!-- End Time -->
+        <div class="flex items-center">
+            <span class="font-semibold text-gray-700 w-40">End Time:</span>
+            <p class="text-gray-800">{{ itinerary.end_time }}</p>
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col">
+            <span class="font-semibold text-gray-700">Description:</span>
+            <p class="text-gray-800 leading-relaxed mt-2">{{ itinerary.details }}</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8">
+        <a href="" class="px-6 py-2 bg-teal-600 text-white font-medium rounded hover:bg-teal-700 transition duration-300">
+            Back to Itineraries
+        </a>
+    </div>
+</div>
+{% endblock %}

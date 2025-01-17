@@ -377,6 +377,22 @@ def list_itinerary(request, trip_id):
     })
 
 @login_required
+def itinerary_detail(request, trip_id, itinerary_id):
+    # Get the itinerary associated with the trip and user
+    itinerary = get_object_or_404(Itinerary, id=itinerary_id, trip_id=trip_id, trip__user=request.user)
+
+    # Fetch the user's preferred currency
+    user_profile = get_object_or_404(User_Profile, user=request.user)
+    preferred_currency = user_profile.preferred_currency
+    preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+
+    return render(request, 'travel/itinerary_detail.html', {
+        'itinerary': itinerary,
+        'preferred_currency': preferred_currency,
+        'preferred_currency_symbol': preferred_currency_symbol,
+    })
+
+@login_required
 def trip_detail(request, trip_id):
     try:
         trip = get_object_or_404(Trip, id=trip_id)
