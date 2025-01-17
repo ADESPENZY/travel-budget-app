@@ -69,6 +69,7 @@
                 <div class="space-x-4 ">
                     <a href="{% url 'download-expenses-pdf' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
                     <a href="{% url 'download-expenses' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download Excel</a>
+                    <a href="{% url 'add-expense' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Add Expenses</a>
                 </div>
 
             </div>
@@ -120,10 +121,10 @@
                     </thead>
                     <tbody>
                         {% for expense in expenses %}
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-gray-50 cursor-pointer" onclick="location.href='{% url 'expense_detail' trip.id expense.id %}'">
                             <td class="border border-gray-300 px-4 text-sm py-2">{{ expense.date }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ expense.category.category }}</td>
-                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ expense.description }}</td>
+                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ expense.description|truncatewords:6 }}</td>
                             <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">
                                 ${{ expense.amount }}
                             </td>
@@ -139,7 +140,7 @@
                                 </a>
                                 
                                 <!-- view icon -->
-                                <a href="{% url 'expense-detail' trip.id expense.id %}" class="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200">
+                                <a href="{% url 'expense_detail' trip.id expense.id %}" class="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded-md hover:bg-gray-200">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 

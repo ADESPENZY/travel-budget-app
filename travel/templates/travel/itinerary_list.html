@@ -114,12 +114,13 @@
                             <th class="border hidden md:flex border-gray-300 px-4 py-2">Actions</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
                         {% for item in itineraries_page %}
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-gray-50 cursor-pointer" onclick="location.href='{% url 'itinerary_detail' trip.id item.id %}'">
                             <td class="border border-gray-300 px-4 py-2">{{ item.start_time }}</td>
                             <td class="border border-gray-300 px-4 py-2">{{ item.category_budget.category }}</td>
-                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ item.details }}</td>
+                            <td class="border hidden md:flex border-gray-300 px-4 py-2">{{ item.details|truncatewords:6 }}</td>
                             <td class="border border-gray-300 px-4 py-2 text-right text-green-600 font-bold">${{ item.budget }}</td>
                             <td class="border hidden md:flex space-x-3 border-gray-300 px-4 py-2 text-center">
                                 <!-- Edit Icon -->
