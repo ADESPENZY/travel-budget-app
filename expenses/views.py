@@ -202,42 +202,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-import openpyxl
-import csv
-
-@login_required
-def download_expenses_csv(request, trip_id):
-    # Get the trip and related expenses
-    trip = get_object_or_404(Trip, id=trip_id, user=request.user)
-    expenses = trip.expenses.all()
-
-    # Create the HttpResponse object
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename=expenses_{trip.trip_name}.csv'
-
-    # Create the CSV writer
-    writer = csv.writer(response)
-    
-    # Add the headers
-    writer.writerow(['Date', 'Category', 'Description', 'Amount', 'Preferred Currency'])
-    
-    # Write rows
-    total_expenses = 0
-    for expense in expenses:
-        total_expenses += expense.amount
-        writer.writerow([
-            expense.date.strftime('%Y-%m-%d'),
-            expense.category.category,
-            expense.description,
-            expense.amount,
-            trip.user.user_profile.preferred_currency if hasattr(trip.user, 'user_profile') else 'N/A',
-        ])
-    
-    # Add totals row
-    writer.writerow(['', '', 'Total', total_expenses, ''])
-    
-    return response
-
 
 
 @login_required

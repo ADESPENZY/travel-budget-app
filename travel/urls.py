@@ -14,7 +14,6 @@ urlpatterns = [
     path('<int:trip_id>/items/delete/<int:itinerary_id>/', views.delete_itinerary, name='delete_itinerary'),
     path('<int:trip_id>/items/list/', views.list_itinerary, name='list_itinerary'),
     path('trip/<int:trip_id>/itinerary/<int:itinerary_id>/', views.itinerary_detail, name='itinerary_detail'),
-    path('itinerary/<int:trip_id>/download/excel/', views.download_itinerary_excel, name='download-itinerary-excel'),
     path('itinerary/<int:trip_id>/download/pdf/', views.download_itinerary_pdf, name='download-itinerary-pdf'),
     path('travel/<int:trip_id>/details/', views.trip_detail, name='trip_detail'),
 ]

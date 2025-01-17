@@ -68,14 +68,11 @@
                 
                 <div class="space-x-4 ">
                     <a href="{% url 'download-expenses-pdf' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download PDF</a>
-                    <a href="{% url 'download-expenses' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Download CSV</a>
                     <a href="{% url 'add-expense' trip.id %}" class="text-white bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-500 transition">Add Expenses</a>
                 </div>
 
             </div>
 
-            
-    
             <!-- Expenses List Section -->
             <div class="p-5">
                 <div class="flex justify-between mb-4">
