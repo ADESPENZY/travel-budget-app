@@ -466,7 +466,7 @@ def download_itinerary_pdf(request, trip_id):
     total_budget = 0
     for itinerary in itineraries:
         # Truncate the details to 6 words
-        truncated_description = Truncator(itinerary.details).words(6) if itinerary.details else 'N/A'
+        truncated_description = Truncator(itinerary.details).words(3) if itinerary.details else 'N/A'
         total_budget += itinerary.budget
         data.append([
             itinerary.title,
