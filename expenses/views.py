@@ -168,6 +168,21 @@ def edit_expense(request, trip_id, expense_id):
     })
 
 @login_required
+def expense_detail(request, trip_id, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, trip_id=trip_id)
+    try:
+        user_profile = User_Profile.objects.get(user=request.user)
+        preferred_currency = user_profile.preferred_currency
+        preferred_currency_symbol = CURRENCY_SYMBOLS.get(preferred_currency, preferred_currency)
+    except User_Profile.DoesNotExist:
+        preferred_currency_symbol = ''
+
+    return render(request, 'expenses/expense_detail.html', {
+        'expense': expense,
+        'preferred_currency_symbol': preferred_currency_symbol,
+    })
+
+@login_required
 def delete_expense(request, trip_id, expense_id):
     # Fetch the expense ensuring it belongs to the user and the given trip_id
     expense = get_object_or_404(Expense, id=expense_id, trip_id=trip_id, user=request.user)
