@@ -4,9 +4,13 @@ from .forms import ExpenseForm
 from travel.models import Trip, CategoryBudget
 from userProfile.models import User_Profile
 from django.contrib.auth.decorators import login_required
-import openpyxl
+from django.contrib import messages
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
 CURRENCY_SYMBOLS = {
     'USD': '$',  # US Dollar
@@ -102,6 +106,10 @@ def add_expense(request, trip_id):
             expense.trip = trip
             expense.save()
             return redirect('expense-list', trip_id=trip.id)
+        else:
+            # Handle form errors
+            for field in form.errors:
+                messages.error(request, form.errors[field])
     else:
         form = ExpenseForm(initial={'trip': trip}, trip=trip)
 
@@ -146,6 +154,10 @@ def edit_expense(request, trip_id, expense_id):
         if form.is_valid():
             form.save()
             return redirect('expense-list', trip_id=trip_id)
+        else:
+            # Handle form errors
+            for field in form.errors:
+                messages.error(request, form.errors[field])
     else:
         form = ExpenseForm(instance=expense, trip=expense.trip)
 
@@ -192,17 +204,6 @@ def delete_expense(request, trip_id, expense_id):
         return redirect('expense-list', trip_id=trip_id)
 
     return render(request, 'expenses/delete_expense.html', {'expense': expense})
-
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from travel.models import Trip
-from userProfile.models import User_Profile
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-
 
 @login_required
 def download_expenses_pdf(request, trip_id):

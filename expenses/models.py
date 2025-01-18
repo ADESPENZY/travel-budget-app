@@ -13,12 +13,16 @@ class Expense(models.Model):
     receipt = models.FileField(upload_to='expense_receipts/', blank=True, null=True)
 
     def clean(self):
-        super().clean()
+        
+        # Validate file type for receipt
         if self.receipt:
-            allowed_types = ['image/jpeg', 'image/png', 'application/pdf', 
-                             'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+            allowed_types = [
+                'image/jpeg', 'image/png', 'application/pdf',
+                'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ]
             if self.receipt.file.content_type not in allowed_types:
                 raise ValidationError("Only image, PDF, or Word document files are allowed.")
+
 
     def __str__(self):
         return f"{self.description} - {self.amount} for {self.trip}"

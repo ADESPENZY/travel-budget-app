@@ -33,6 +33,20 @@ class ItineraryForm(forms.ModelForm):
         if trip:
             self.fields['category_budget'].queryset = trip.category_budgets.all()
 
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        category = self.cleaned_data.get('category')
+        
+        if category:
+            remaining_budget = category.remaining_budget()
+            if amount > remaining_budget:
+                raise forms.ValidationError(
+                    f"The amount exceeds the remaining budget for the category '{category.category}'. "
+                    f"Remaining budget: {remaining_budget}."
+                )
+        return amount
+
+
 class CategoryBudgetForm(forms.ModelForm):
     class Meta:
         model = CategoryBudget
