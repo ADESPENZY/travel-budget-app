@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import Account
+from userAccount.models import Account
 from django.core.validators import RegexValidator, FileExtensionValidator
 
 # Create your models here.
