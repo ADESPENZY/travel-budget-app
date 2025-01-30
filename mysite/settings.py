@@ -172,5 +172,8 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Users log in with email
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'mandatory' if needed
 
 # Redirect URLs after login/logout
-LOGIN_REDIRECT_URL = '/'  # Change to your dashboard if needed
+LOGIN_REDIRECT_URL = '/dashboard/'  # Change to your dashboard if needed
 LOGOUT_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '761931744795-2p18jd7c9l6oao74qira3f1eg1r62lob.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'

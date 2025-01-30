@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load allauth account %}
+
+{% block title %}
+    {% trans "Sign In" %}
+{% endblock %}
+
+{% block main %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+        <div class="text-center">
+            <img class="mx-auto h-16 w-auto" src="{% static 'path_to_logo.png' %}" alt="Your Logo">
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-700">
+                {% trans "Sign in to your account" %}
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                {% trans "Or" %}
+                <a href="{{ signup_url }}" class="font-medium text-yellow-600 hover:text-yellow-500">
+                    {% trans "sign up for a new account" %}
+                </a>
+            </p>
+        </div>
+        <form class="mt-8 space-y-6" method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="redirect_field_value" value="{{ redirect_field_value }}">
+            <div class="rounded-md shadow-sm -space-y-px">
+                {% for field in form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="sr-only">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="text-red-500 text-xs italic">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" name="remember" type="checkbox" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded">
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-700">
+                        {% trans "Remember me" %}
+                    </label>
+                </div>
+                <div class="text-sm">
+                    <a href="{% url 'account_reset_password' %}" class="font-medium text-yellow-600 hover:text-yellow-500">
+                        {% trans "Forgot your password?" %}
+                    </a>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                    {% trans "Sign In" %}
+                </button>
+            </div>
+        </form>
+        {% if SOCIALACCOUNT_ENABLED %}
+            <div class="mt-6">
+                {% include "socialaccount/snippets/login.html" %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

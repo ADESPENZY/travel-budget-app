@@ -12,11 +12,11 @@ def register_user(request):
             return redirect('login-page')  # Replace 'login-page' with your actual login view name
         else:
             messages.error(request, "There were errors in your form. Please fix them and try again.")
-            return render(request, 'account/register-page.html', {'form': form})  # Re-render with errors
+            return render(request, 'userAccount/register-page.html', {'form': form})  # Re-render with errors
     else:
         form = RegisterUser()
 
-    return render(request, 'account/register-page.html', {'form': form})
+    return render(request, 'userAccount/register-page.html', {'form': form})
 
 
 def login_user(request):
@@ -35,7 +35,7 @@ def login_user(request):
         else:
             messages.error(request, "Invalid username or password")
 
-    return render(request, 'account/login-page.html')
+    return render(request, 'userAccount/login-page.html')
 
 
 def logout_user(request):

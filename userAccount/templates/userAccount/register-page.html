@@ -1,5 +1,6 @@
 {% extends 'Base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block main %}
 <section class="flex flex-col justify-center items-center signup-bg" >
@@ -83,6 +84,15 @@
                 <a href="#" class="text-teal-400 hover:underline">Privacy Policy</a>.
             </p>
         </div>
+
+        <!-- Google Authentication Link -->
+        <div class="mt-6">
+            <a href="{% provider_login_url 'google' %}" class="w-full flex justify-center items-center bg-white text-gray-800 rounded-full py-3 font-medium hover:bg-gray-100 transition duration-300">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Google_%22G%22_Logo.svg/768px-Google_%22G%22_Logo.svg.png" alt="Google logo" class="h-6 mr-3" />
+                <span>Sign In with Google</span>
+            </a>
+        </div>
+        
     </div>
 </section>
 {% endblock %}
