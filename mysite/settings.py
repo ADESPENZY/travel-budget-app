@@ -175,8 +175,17 @@ ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'mandatory' if needed
 LOGIN_REDIRECT_URL = '/dashboard/'  # Change to your dashboard if needed
 LOGOUT_REDIRECT_URL = '/'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '761931744795-2p18jd7c9l6oao74qira3f1eg1r62lob.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+import os
+import environ
+
+# Initialize environ
+env = environ.Env()
+# Read the .env file
+environ.Env.read_env()
+
+# Now you can use the environment variables
+GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
 
 # for sending email reseting password
 from decouple import Config
