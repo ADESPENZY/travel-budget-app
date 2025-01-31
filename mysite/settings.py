@@ -165,7 +165,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Required for allauth
-SITE_ID = 1
+SITE_ID = 3
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Users log in with email

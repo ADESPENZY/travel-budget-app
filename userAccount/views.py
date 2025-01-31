@@ -2,12 +2,22 @@ from django.shortcuts import render, redirect
 from .forms import RegisterUser
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
+from django.conf import settings
 
 def register_user(request):
     if request.method == 'POST':
         form = RegisterUser(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            # Send Welcome Email
+            send_mail(
+                subject='Welcome to Travel Budget!',
+                message='Hello {},\n\nThank you for registering at Travel Budget. We are excited to have you on board!'.format(user.username),
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
             messages.success(request, "Your account has been created successfully. You can now log in.")
             return redirect('login-page')  # Replace 'login-page' with your actual login view name
         else:
