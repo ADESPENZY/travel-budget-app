@@ -178,14 +178,13 @@ LOGOUT_REDIRECT_URL = '/'
 import os
 import environ
 
-# Initialize environ
+# Initialize environment variables
 env = environ.Env()
-# Read the .env file
-environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Now you can use the environment variables
-GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
-GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 
 # for sending email reseting password
 from decouple import Config
