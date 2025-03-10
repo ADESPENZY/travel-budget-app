@@ -1,0 +1,70 @@
+{% load static %}
+<footer class="bg-gray-900 text-gray-300 py-12">
+    <div class="w-[80%] mx-auto py-4 px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 ">
+            
+            <!-- Company Info -->
+            <div>
+                <h5 class="text-xl font-semibold flex items-center space-x-3 mb-4">
+                    <img src="{% static 'image/voyage_logo1.png' %}" alt="Logo" class="w-10">
+                    <span class="text-yellow-500">Travelo</span>
+                </h5>
+                <p class="text-sm">5th Flora, 700/D Kings Road, Green Lane, New York - 1782</p>
+                <p class="mt-2 text-sm">+10 367 826 2567</p>
+                <p class="text-sm">contact@carpenter.com</p>
+                
+                <!-- Social Icons -->
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-xl"><i class="fab fa-pinterest"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-yellow-500 transition text-xl"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Company Links -->
+            <div>
+                <h5 class="text-xl font-semibold text-yellow-500 mb-4">Company</h5>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#" class="hover:text-yellow-500 transition">Pricing</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 transition">About</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 transition">Gallery</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 transition">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Popular Destinations -->
+            <div>
+                <h5 class="text-xl font-semibold text-yellow-500 mb-4">Popular Destinations</h5>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-500 transition">Indonesia</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">India</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">Italy</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">France</a></li>
+                    </ul>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-500 transition">America</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">Switzerland</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">Canada</a></li>
+                        <li><a href="#" class="hover:text-yellow-500 transition">England</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Instagram Gallery -->
+            <div>
+                <h5 class="text-xl font-semibold text-yellow-500 mb-4">Instagram</h5>
+                <div class="grid grid-cols-3 gap-3">
+                    <a href="#"><img src="{% static 'image/1.png.webp' %}" alt="Image 1" class="rounded-lg hover:scale-110 transition"></a>
+                    <a href="#"><img src="{% static 'image/2.png.webp' %}" alt="Image 2" class="rounded-lg hover:scale-110 transition"></a>
+                    <a href="#"><img src="{% static 'image/3.png.webp' %}" alt="Image 3" class="rounded-lg hover:scale-110 transition"></a>
+                    <a href="#"><img src="{% static 'image/2.png.webp' %}" alt="Image 4" class="rounded-lg hover:scale-110 transition"></a>
+                    <a href="#"><img src="{% static 'image/3.png.webp' %}" alt="Image 5" class="rounded-lg hover:scale-110 transition"></a>
+                    <a href="#"><img src="{% static 'image/1.png.webp' %}" alt="Image 6" class="rounded-lg hover:scale-110 transition"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

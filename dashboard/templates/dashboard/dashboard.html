@@ -40,6 +40,12 @@
                 </li>
                 <li class="flex items-center gap-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L16.25 10M9.75 7h11.5M3 17h6.75m-6.75-10h6.75" />
+                    </svg>
+                    <a href="{% url 'home-page' %}">Home Page</a>
+                </li>
+                <li class="flex items-center gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4z" />
                     </svg>
                     <a href="{% url 'add_trip' %}">Create Trips</a>
@@ -105,52 +111,58 @@
 
             <!-- Trip Card -->
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                
-                {% for trip in user_trips %}
-                <h2 class="text-xl font-bold text-yellow-600 mb-3">Current Trip</h2>
+                {% if user_trips %}
+                    <h2 class="text-xl font-bold text-yellow-600 mb-3">Current Trip</h2>
 
-                <!-- Destination -->
-                <div class="flex items-center mb-3">
-                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.707 13.293a1 1 0 010 1.414l-5.657 5.657a1 1 0 01-1.414 0l-5.657-5.657a1 1 0 010-1.414L10 8.586a1 1 0 011.414 0L16.707 13.293z" />
-                    </svg>
-                    <p class="text-sm text-gray-300"><span class="font-bold">Destination:</span> {{ trip.destination_name }}</p>
-                </div>
+                    {% for trip in user_trips %}
+                    <!-- Destination -->
+                    <div class="flex items-center mb-3">
+                        <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.707 13.293a1 1 0 010 1.414l-5.657 5.657a1 1 0 01-1.414 0l-5.657-5.657a1 1 0 010-1.414L10 8.586a1 1 0 011.414 0L16.707 13.293z" />
+                        </svg>
+                        <p class="text-sm text-gray-300"><span class="font-bold">Destination:</span> {{ trip.destination_name }}</p>
+                    </div>
 
-                <!-- Start and End Dates -->
-                <div class="flex items-center mb-3">
-                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-8 14v4m8-4v4m-8-4h8a2 2 0 012 2v0a2 2 0 01-2 2H8a2 2 0 01-2-2v0a2 2 0 012-2zm0-4h8m-8-4h8M7 10h1m8 0h1m-9 0h1m8 0h1M7 14h1m8 0h1m-9 0h1m8 0h1" />
-                    </svg>
-                    <p class="text-sm text-gray-300">
-                        <span class="font-bold">Dates:</span> {{ trip.start_date }} - {{ trip.end_date }}
-                    </p>
-                </div>
+                    <!-- Start and End Dates -->
+                    <div class="flex items-center mb-3">
+                        <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-8 14v4m8-4v4m-8-4h8a2 2 0 012 2v0a2 2 0 01-2 2H8a2 2 0 01-2-2v0a2 2 0 012-2zm0-4h8m-8-4h8M7 10h1m8 0h1m-9 0h1m8 0h1M7 14h1m8 0h1m-9 0h1m8 0h1" />
+                        </svg>
+                        <p class="text-sm text-gray-300">
+                            <span class="font-bold">Dates:</span> {{ trip.start_date }} - {{ trip.end_date }}
+                        </p>
+                    </div>
 
-                <!-- Total and Remaining Budget -->
-                <div class="flex items-center mb-3">
-                    <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c.341 0 .674.028 1 .08m-2 11.92c.326.052.659.08 1 .08m-6-5a10 10 0 0010 10m-9-5a10 10 0 0110-10m9 5a10 10 0 00-10-10m9 5a10 10 0 01-10 10m-9-5a10 10 0 0010-10" />
-                    </svg>
-                    <p class="text-sm text-gray-300">
-                        <span class="font-bold">Budget:</span> {{ trip.budget }} <span class="text-green-400">(Remaining: $500)</span>
-                    </p>
-                </div>
+                    <!-- Total and Remaining Budget -->
+                    <div class="flex items-center mb-3">
+                        <svg class="w-5 h-5 text-yellow-600 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c.341 0 .674.028 1 .08m-2 11.92c.326.052.659.08 1 .08m-6-5a10 10 0 0010 10m-9-5a10 10 0 0110-10m9 5a10 10 0 00-10-10m9 5a10 10 0 01-10 10m-9-5a10 10 0 0010-10" />
+                        </svg>
+                        <p class="text-sm text-gray-300">
+                            <span class="font-bold">Budget:</span> {{ trip.budget }} <span class="text-green-400">(Remaining: $500)</span>
+                        </p>
+                    </div>
 
-                <!-- Small Itineraries -->
-                <div>
-                    <h3 class="text-sm font-bold text-yellow-600 mb-2">Itinerary:</h3>
-                    <ul class="list-disc pl-5 space-y-1 text-gray-300 text-sm">
-                        <li>Eiffel Tower visit at 10:00 AM</li>
-                        <li>Lunch at Le Jules Verne</li>
-                        <li>Evening Seine River Cruise</li>
-                        <li>Day trip to Versailles</li>
-                    </ul>
-                </div>
-                    
-                {% endfor %}
-                    
+                    <!-- Small Itineraries -->
+                    <div>
+                        <h3 class="text-sm font-bold text-yellow-600 mb-2">Itinerary:</h3>
+                        <ul class="list-disc pl-5 space-y-1 text-gray-300 text-sm">
+                            <li>Eiffel Tower visit at 10:00 AM</li>
+                            <li>Lunch at Le Jules Verne</li>
+                            <li>Evening Seine River Cruise</li>
+                            <li>Day trip to Versailles</li>
+                        </ul>
+                    </div>
+                    {% endfor %}
 
+                {% else %}
+                    <!-- No Trips Found Message -->
+                    <div class="text-center text-gray-300">
+                        <p class="text-lg font-bold text-yellow-600">No Trips Yet</p>
+                        <p class="text-sm mt-2">You haven't created any trips. Start planning your next adventure now!</p>
+                        <a href="{% url 'add_trip' %}" class="mt-4 inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition duration-300">Create a Trip</a>
+                    </div>
+                {% endif %}
             </div>
 
 

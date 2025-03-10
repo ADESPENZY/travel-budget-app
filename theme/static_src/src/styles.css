@@ -70,3 +70,45 @@ input#phone {
 .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
     background-color: rgba(0, 0, 0, 0.05);
 }
+
+.my-container{
+    @apply w-[80%] mx-auto
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 8px; /* Space between grid items */
+    width: 400px;
+    height: 300px;
+    position: relative;
+}
+
+/* Base Style for Grid Items */
+.grid-item {
+    background-image: url('/static/image/header-image3.jpg'); /* Correct static path */
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item2 {
+    background-image: url('/static/image/header-image2.jpg'); /* Correct static path */
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom Shapes: Make Some Bigger */
+.item1 { background-position: 0% 0%; grid-column: span 2; grid-row: span 1; }
+.item2 { background-position: 50% 0%; grid-column: span 1; grid-row: span 1; }
+.item3 { background-position: 100% 0%; grid-column: span 1; grid-row: span 2; }
+
+.item4 { background-position: 0% 50%; grid-column: span 1; grid-row: span 2; }
+.item5 { background-position: 50% 50%; grid-column: span 2; grid-row: span 2; }
+.item6 { background-position: 100% 50%; grid-column: span 1; grid-row: span 1; }
+
+.item7 { background-position: 0% 100%; grid-column: span 2; grid-row: span 1; }
+.item8 { background-position: 50% 100%; grid-column: span 1; grid-row: span 1; }
+.item9 { background-position: 100% 100%; grid-column: span 1; grid-row: span 2; }

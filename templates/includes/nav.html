@@ -1,0 +1,59 @@
+{% load static %}
+
+<style>
+    @keyframes wiggle {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(2deg); }
+        50% { transform: rotate(-2deg); }
+        75% { transform: rotate(2deg); }
+        100% { transform: rotate(0deg); }
+    }
+    .animate-wiggle:hover {
+        animation: wiggle 0.2s ease-in-out 2;
+    }
+</style>
+
+<nav class="bg-gray-900 bg-opacity-90 shadow-md sticky top-0 z-50">
+    <div class="w-[80%] mx-auto flex items-center justify-between py-4 px-6">
+        <!-- Logo -->
+        <a href="{% url 'home-page' %}" class="flex items-center">
+            <img src="{% static 'image/voyage_logo1.png' %}" alt="Logo" class="w-24">
+        </a>
+        
+        <!-- Mobile Menu Button -->
+        <button id="menu-toggle" class="lg:hidden text-yellow-500 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+        
+        <!-- Navbar Links -->
+        <div id="menu" class="hidden lg:flex space-x-6 text-gray-300">
+            <a href="{% url 'home-page' %}" class="hover:text-yellow-400">Home</a>
+            <a href="" class="hover:text-yellow-400">Destinations</a>
+            <a href="" class="hover:text-yellow-400">About</a>
+            <a href="" class="hover:text-yellow-400">Contact</a>
+        </div>
+        
+        <!-- Authentication Buttons -->
+        <div class="hidden lg:flex space-x-4">
+            <a href="{% url 'login-page' %}" class="px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-500 hover:text-gray-900 transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-yellow-500/50 animate-wiggle">
+                Login
+            </a>
+            <a href="{% url 'register-page' %}" class="px-2 py-1 border border-yellow-500 text-yellow-500 rounded-md hover:bg-yellow-500 hover:text-gray-900 transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-yellow-500/50 animate-wiggle">
+                Register
+            </a>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="lg:hidden flex flex-col items-center bg-gray-900 bg-opacity-95 py-4 shadow-md text-gray-300">
+        <a href="{% url 'home-page' %}" class="py-2 hover:text-yellow-400">Home</a>
+        <a href="" class="py-2 hover:text-yellow-400">Destinations</a>
+        <a href="" class="py-2 hover:text-yellow-400">About</a>
+        <a href="" class="py-2 hover:text-yellow-400">Contact</a>
+        <a href="{% url 'login-page' %}" class="py-2 hover:text-yellow-400">Login</a>
+        <a href="{% url 'register-page' %}" class="py-2 hover:text-yellow-400">Register</a>
+    </div>
+</nav>
+

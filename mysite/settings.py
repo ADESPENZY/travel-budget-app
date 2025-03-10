@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'travel',
     'userProfile',
     'expenses',
+    'main',
 
     # tailwind config
     'tailwind',
@@ -168,12 +169,13 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 3
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Users log in with email
+ACCOUNT_LOGIN_METHODS = {'email'}  # Replaces ACCOUNT_AUTHENTICATION_METHOD
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Change to 'mandatory' if needed
 
 # Redirect URLs after login/logout
-LOGIN_REDIRECT_URL = '/dashboard/'  # Change to your dashboard if needed
+LOGIN_REDIRECT_URL = '/dashboard/'  # Ensure it has a trailing slash
 LOGOUT_REDIRECT_URL = '/'
+
 
 import os
 import environ
