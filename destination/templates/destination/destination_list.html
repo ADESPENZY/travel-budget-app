@@ -1,0 +1,142 @@
+{% extends 'Base_Page.html' %}
+{% load static %}
+
+{% block main %}
+
+<section>
+    <div class="carousel prev relative">
+        <div class="list">
+            <div class="item">
+                <img src="{% static 'image/hero-images9.png' %}" alt="" >
+                <div class="content space-y-5">
+                    <h3 class="country font-bold tracking-wider text-xl">Switzerland Alps</h3>
+                    <h2 class="location font-bold text-5xl">SAINT ANTONIEN</h2>
+                    <h2 class="type font-bold text-5xl text-yellow-600">ADVENTURE1</h2>
+                    <P class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias error quisquam provident tenetur magnam nulla suscipit. Voluptatem omnis consectetur perspiciatis.</P>
+                    <div class="buttons flex space-x-6">
+                        <button class="bg-yellow-600 hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SEE MORE</button>
+                        <button class="border hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SUSCRIBE</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="item">
+                <img src="{% static 'image/hero-images8.png' %}" alt="">
+                <div class="content space-y-5">
+                    <h3 class="country font-bold tracking-wider text-xl">Switzerland Alps</h3>
+                    <h2 class="location font-bold text-5xl">SAINT ANTONIEN</h2>
+                    <h2 class="type font-bold text-5xl text-yellow-600">ADVENTURE2</h2>
+                    <P class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias error quisquam provident tenetur magnam nulla suscipit. Voluptatem omnis consectetur perspiciatis.</P>
+                    <div class="buttons flex space-x-6">
+                        <button class="bg-yellow-600 hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SEE MORE</button>
+                        <button class="border hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SUSCRIBE</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="item">
+                <img src="{% static 'image/hero-images7.png' %}" alt="">
+                <div class="content space-y-5">
+                    <h3 class="country font-bold tracking-wider text-xl">Switzerland Alps</h3>
+                    <h2 class="location font-bold text-5xl">SAINT ANTONIEN</h2>
+                    <h2 class="type font-bold text-5xl text-yellow-600">ADVENTURE3</h2>
+                    <P class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias error quisquam provident tenetur magnam nulla suscipit. Voluptatem omnis consectetur perspiciatis.</P>
+                    <div class="buttons flex space-x-6">
+                        <button class="bg-yellow-600 hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SEE MORE</button>
+                        <button class="border hover:bg-black py-2 px-4 shadow-sm rounded-lg tracking-wide font-bold">SUSCRIBE</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="thumbnail">
+            
+            <div class="item ">
+                <img src="{% static 'image/hero-images9.png' %}" alt="">
+                <div class="thumb-content">
+                    <h3 class="country text-sm font-bold tracking-wider">Switzerland Alps</h3>
+                    <h2 class="type font-bold text-sm text-yellow-600">SAINT ANTONIEN</h2>
+                </div>
+            </div>
+            <div class="item  ">
+                <img src="{% static 'image/hero-images8.png' %}" alt="">
+                <div class="thumb-content">
+                    <h3 class="country font-bold text-sm tracking-wider">Switzerland Alps</h3>
+                    <h2 class="type font-bold text-sm text-yellow-600">SAINT ANTONIEN</h2>
+                </div>
+            </div>
+            <div class="item  ">
+                <img src="{% static 'image/hero-images7.png' %}" alt="">
+                <div class="thumb-content">
+                    <h3 class="country font-bold text-sm tracking-wider">Switzerland Alps</h3>
+                    <h2 class="type font-bold text-sm text-yellow-600">SAINT ANTONIEN</h2>
+                </div>
+            </div>
+        </div> 
+        <!-- arrows -->
+        <div class="arrows absolute top-[80%] z-50 right-72 md:left-52 w-[120px] flex justify-between items-center">
+            <div id="prev" 
+                class="prev w-[50px] h-[50px] flex items-center justify-center rounded-full bg-[#eee4] text-black text-2xl font-bold shadow-lg hover:bg-black hover:text-white transition duration-300 cursor-pointer">
+                &#10094; <!-- Left Arrow -->
+            </div>
+            <div id="next" 
+                class=" w-[50px] h-[50px] flex items-center justify-center rounded-full bg-[#eee4] text-black text-2xl font-bold shadow-lg hover:bg-black hover:text-white transition duration-300 cursor-pointer">
+                &#10095; <!-- Right Arrow -->
+            </div>
+        </div>
+        <!-- time -->
+         <div class="time"></div>
+    </div>
+</section>
+
+<script>
+    const nextDom = document.getElementById("next");
+    const prevDom = document.getElementById("prev");
+    let carouselDom = document.querySelector('.carousel')
+    let listItemDom = document.querySelector('.carousel .list')
+    let thumbnailDom = document.querySelector('.carousel .thumbnail')
+
+    nextDom.onclick = function(){
+        showSlider('next');
+    }
+    prevDom.onclick = function(){
+        showSlider('prev')
+    }
+
+    let timeRunning = 3000;
+    let timeAutoNext = 7000;
+    let runTimeout;
+    let runAutoRun = setTimeout(()=> {
+            nextDom.click()
+
+        }, timeAutoNext)
+
+    function showSlider(type){
+        let itemSlider = document.querySelectorAll('.carousel .list .item');
+        let itemThumbnail = document.querySelectorAll('.carousel .thumbnail .item');
+
+        if (type === 'next'){
+            listItemDom.appendChild(itemSlider[0])
+            thumbnailDom.appendChild(itemThumbnail[0])
+            carouselDom.classList.add('next');
+        }else{
+            let positionLastItem = itemSlider.length - 1;
+            listItemDom.prepend(itemSlider[positionLastItem]);
+            thumbnailDom.prepend(itemThumbnail[positionLastItem]);
+            carouselDom.classList.add('prev')
+        }
+
+        clearTimeout(runTimeout);
+        runTimeout = setTimeout(() => {
+            carouselDom.classList.remove('next');
+            carouselDom.classList.remove('prev');
+        }, timeRunning)
+
+        clearTimeout(runAutoRun);
+        runAutoRun = setTimeout(()=> {
+            nextDom.click()
+
+        }, timeAutoNext)
+    }
+</script>
+{% endblock %}

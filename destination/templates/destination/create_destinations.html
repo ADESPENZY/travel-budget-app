@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Create Destination</h2>
+
+    {% if messages %}
+        <ul class="mb-4">
+            {% for message in messages %}
+                <li class="text-green-600">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+
+        <label for="id_location_name" class="block text-gray-700">Location Name:</label>
+        <input type="text" name="location_name" id="id_location_name" class="w-full p-2 border rounded" required>
+
+        <label for="id_country" class="block text-gray-700">Country:</label>
+        <select name="country" id="id_country" class="w-full p-2 border rounded">
+            {% for country in form.fields.country.choices %}
+                <option value="{{ country.0 }}">{{ country.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="id_description" class="block text-gray-700">Description:</label>
+        <textarea name="description" id="id_description" class="w-full p-2 border rounded"></textarea>
+
+        <label for="id_price" class="block text-gray-700">Price:</label>
+        <input type="number" name="price" id="id_price" class="w-full p-2 border rounded" required>
+
+        <label for="id_image" class="block text-gray-700">Image:</label>
+        <input type="file" name="image" id="id_image" class="w-full p-2 border rounded">
+
+        <label for="id_is_popular" class="inline-flex items-center">
+            <input type="checkbox" name="is_popular" id="id_is_popular" class="mr-2">
+            <span class="text-gray-700">Mark as Popular</span>
+        </label>
+
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Create Destination</button>
+    </form>
+</div>
+{% endblock %}

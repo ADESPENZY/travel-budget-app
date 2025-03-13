@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'userProfile',
     'expenses',
     'main',
+    'destination',
 
     # tailwind config
     'tailwind',

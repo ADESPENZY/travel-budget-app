@@ -27,6 +27,7 @@ urlpatterns = [
     path('travel/', include('travel.urls')),
     path('expenses/', include('expenses.urls')),
     path('userProfile/', include('userProfile.urls')),
+    path('destination/', include('destination.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
     path('accounts/', include('allauth.urls')),  # Django Allauth URLs
 
