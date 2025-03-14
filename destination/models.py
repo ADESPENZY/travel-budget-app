@@ -35,6 +35,13 @@ class Country(models.Model):
     def __str__(self):
       return self.country
     
+class Facility(models.Model):
+    name = models.CharField(max_length=100)
+    icon_class = models.CharField(max_length=255, help_text="Enter Tailwind CSS or SVG class for the icon", blank=True)
+
+    def __str__(self):
+        return self.name
+    
 class Destination(models.Model):
     location_name = models.CharField(max_length=100)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
@@ -44,6 +51,7 @@ class Destination(models.Model):
     image = models.ImageField(upload_to='destination_image',)
     created_at = models.DateTimeField(default=timezone.now,)
     is_popular = models.BooleanField(default=False)
+    facilities = models.ManyToManyField(Facility, blank=True)  # Allows multiple facilities
     
     def __str__ (self):
         return self.location_name

@@ -839,6 +839,10 @@ select {
   left: 2.5rem;
 }
 
+.left-2 {
+  left: 0.5rem;
+}
+
 .left-3 {
   left: 0.75rem;
 }
@@ -879,6 +883,10 @@ select {
   top: 3rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
 .top-4 {
   top: 1rem;
 }
@@ -897,6 +905,11 @@ select {
 
 .col-span-1 {
   grid-column: span 1 / span 1;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .mx-auto {
@@ -1090,6 +1103,10 @@ select {
 
 .h-6 {
   height: 1.5rem;
+}
+
+.h-64 {
+  height: 16rem;
 }
 
 .h-72 {
@@ -1331,6 +1348,10 @@ select {
 
 .justify-around {
   justify-content: space-around;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .gap-10 {
@@ -1605,6 +1626,11 @@ select {
   border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
 }
 
+.border-gray-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity, 1));
+}
+
 .border-green-400 {
   --tw-border-opacity: 1;
   border-color: rgb(74 222 128 / var(--tw-border-opacity, 1));
@@ -1639,8 +1665,18 @@ select {
   border-color: rgb(202 138 4 / var(--tw-border-opacity, 1));
 }
 
+.border-yellow-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(133 77 14 / var(--tw-border-opacity, 1));
+}
+
 .bg-\[\#eee4\] {
   background-color: #eee4;
+}
+
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
 }
 
 .bg-blue-100 {
@@ -2193,6 +2229,11 @@ select {
   color: rgb(133 77 14 / var(--tw-text-opacity, 1));
 }
 
+.text-yellow-200 {
+  --tw-text-opacity: 1;
+  color: rgb(254 240 138 / var(--tw-text-opacity, 1));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2265,6 +2306,11 @@ select {
 
 .shadow-yellow-600 {
   --tw-shadow-color: #ca8a04;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-transparent {
+  --tw-shadow-color: transparent;
   --tw-shadow: var(--tw-shadow-colored);
 }
 
@@ -2494,7 +2540,7 @@ input#phone {
 }
 
 .carousel{
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
   margin-top: -70px;
@@ -2508,7 +2554,7 @@ input#phone {
 
 .carousel .list .item img{
   width: 100%;
-  height: 100%;
+  height: 100vh;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2693,7 +2739,6 @@ input#phone {
 .time{
   width: 100%;
   height: 3px;
-  background-color: #f1683a;
   position: absolute;
   z-index: 100;
   top: 0;
@@ -3050,6 +3095,10 @@ input#phone {
     width: 75%;
   }
 
+  .md\:w-\[25\%\] {
+    width: 25%;
+  }
+
   .md\:w-\[30\%\] {
     width: 30%;
   }
@@ -3064,6 +3113,10 @@ input#phone {
 
   .md\:w-\[70\%\] {
     width: 70%;
+  }
+
+  .md\:w-\[75\%\] {
+    width: 75%;
   }
 
   .md\:w-\[80\%\] {
@@ -3199,6 +3252,10 @@ input#phone {
 
   .lg\:h-full {
     height: 100%;
+  }
+
+  .lg\:w-1\/3 {
+    width: 33.333333%;
   }
 
   .lg\:w-\[20\%\] {
